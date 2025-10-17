@@ -113,9 +113,6 @@ function mensaje(event){
                 [styles.nombre]: hola,
                 [styles.otro]: !hola
             })}>Lista de Usuarios</h1>
-            {userList ? userList.map((user, index) => (
-                <Usuario key={index} nombre={user.nombre} foto={user.foto} />
-            )) : "error"}
             {mensajes ? mensajes.map((mensaje, index) => (
                 <Mensaje key={index} texto={mensaje} />
             )) : "error"}

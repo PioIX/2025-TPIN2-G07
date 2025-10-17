@@ -1,26 +1,28 @@
-.custom-dialog {
-  background-color: rgba(0, 0, 0, 0.7);
-  border: none;
+.body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
   padding: 0;
-  max-width: 400px;
-  border-radius: 5px;
 }
 
-.modal-content {
+.modalContent {
   background-color: #3a0000;
-  padding: 40px 30px;
+  padding: 15% ;
   text-align: center;
   border-radius: 5px;
 }
 
-.modal-content title {
-  font-size: 1.5em;
+.titleLobby {
+  font-size: 3rem;
   font-weight: bold;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   color: white;
 }
 
-.modal-content button {
+.butonLobby {
   display: block;
   width: 100%;
   padding: 12px 20px;
@@ -31,7 +33,7 @@
   font-size: 1em;
 }
 
-.modal-content button:hover {
+.butonLobby:hover {
   background: white;
   color: #3a0000;
 }
