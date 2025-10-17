@@ -12,13 +12,10 @@ import { useSocket } from '../hooks/useSocket';
 export default function Lobby() {
     return <>
         <div className={styles.body}>
-            <Boton text={"Abrir Opciones"}></Boton>
-
-            
-                <div className="modal-content">
-                    <Title className={} text={"Que queres hacer"}></Title>
-                    <Boton text={"Ingresar a una sala"}></Boton>
-                    <Boton text={"Crear una sala"}></Boton>
+                <div className={styles.modalContent}>
+                    <Title className={styles.titleLobby} text={"¿Qué queres hacer?"}></Title>
+                    <Boton className={styles.butonLobby} text={"Ingresar a una sala"}></Boton>
+                    <Boton className={styles.butonLobby} text={"Crear una sala"}></Boton>
                 </div>
            
         </div>
