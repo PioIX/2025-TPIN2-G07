@@ -116,6 +116,7 @@ function mensaje(event){
             {mensajes ? mensajes.map((mensaje, index) => (
                 <Mensaje key={index} texto={mensaje} />
             )) : "error"}
+            
         </div>
     </>;
 }

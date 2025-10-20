@@ -1,5 +1,8 @@
 'use client'
 
+
+
+
 import { useEffect, useState } from 'react'
 import clsx from 'clsx';
 import Usuario from '../componentes/Usuario';
@@ -10,6 +13,9 @@ import { useSocket } from '../hooks/useSocket';
 import Mensaje from '../componentes/Mensaje';
 
 
+
+let id=true
+
 export default function Chat() {
     const [userList, setUserList] = useState([]);
     const { socket, isconnected } = useSocket()
@@ -17,6 +23,8 @@ export default function Chat() {
     const [salaACT, setSalaACT] = useState(0)
     const [mensajeACT, setmensajeACT] = useState("");
     const [mensajes, setMensajes] = useState([]);
+    const [isPopupOpen, setPopupOpen] = useState(false);
+
     function pingAll() {
         socket.emit("pingAll", { msg: "Hola desde mi compu" });
     }
@@ -41,23 +49,30 @@ export default function Chat() {
         socket.emit("sendMessage", { message: mensajeACT })
     };
 
-    function mensaje(event){
-    setmensajeACT(event.target.value)
+    function mensaje(event) {
+        setmensajeACT(event.target.value)
     };
     let hola = true;
     return <>
-        <div className={styles.bodyChat}>
-            <Boton className={styles.botonChat} text={"Ping a todos"} onClick={pingAll} />
-            <Boton className={styles.botonChat} text={"Unirse a una sala"} onClick={unirseASala} />
-            <Boton className={styles.botonChat} text={"Enviar mensaje"} onClick={enviarMensaje} />
-            <h2 className={styles.subtitulo}>sala</h2>
-            <Input className={styles.inputChat} onChange={elegirSala} />
-            <h2 className={styles.subtitulo}>mensaje</h2>
-            <Input  className={styles.inputChat} onChange={mensaje} />
-            {mensajes ? mensajes.map((mensaje, index) => (
-                <Mensaje key={index} text={mensaje} />
-            )) : "error"}
-        </div>
-    </>;
+        <div className={styles.container}>
 
+            <main className={styles.chatArea}>
+
+                <div className={styles.messages}>
+                    {mensajes ? mensajes.map((mensaje, index) => (
+                        <Mensaje ID={id} key={index} texto={mensaje} />
+                    )) : "error"}
+                </div>
+
+                <div className={styles.inputRow}>
+                    <Input tipo="chat" placeholder="Escribí un mensaje..." onChange={mensaje} />
+                    <Boton text="Enviar" onClick={enviarMensaje} />
+                    <Input onChange={elegirSala} />
+                    <Boton text={"Unirse a una sala"} onClick={unirseASala} />
+                    
+
+                </div>
+            </main>
+        </div>
+    </>
 }
