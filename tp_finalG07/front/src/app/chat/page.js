@@ -9,8 +9,7 @@ import Input from "../componentes/Input";
 import { useSocket } from "../hooks/useSocket";
 import Mensaje from "../componentes/Mensaje";
 
-let id1 = true;
-let id2 = false;
+let id = true;
 
 export default function Chat() {
   const [userList, setUserList] = useState([]);
@@ -55,9 +54,15 @@ export default function Chat() {
     <>
       <div className={styles.container}>
         <main className={styles.chatArea}>
-
           <div className={styles.role}>
             Tu rol es: <span>"ver de poner un props o id segun q sea"</span>
+          </div>
+          <div className={styles.messages}>
+            {mensajes
+              ? mensajes.map((mensaje, index) => (
+                  <Mensaje ID={id} key={index} texto={mensaje} />
+                ))
+              : "error"}
           </div>
           <div className={styles.messages}>
             <Mensaje className={styles.messageTrue} texto={"Holaa"} />
@@ -65,27 +70,42 @@ export default function Chat() {
           </div>
 
           <div className={styles.inputRow}>
-            <Input tipo="chat" placeholder="Escribí un mensaje..." onChange={mensaje}/>
-            <Boton className={styles.boton} text="Enviar" onClick={enviarMensaje} />
+            <Input
+              tipo="chat"
+              placeholder="Escribí un mensaje..."
+              onChange={mensaje}
+            />
+            <Boton
+              className={styles.boton}
+              text="Enviar"
+              onClick={enviarMensaje}
+            />
             <Input onChange={elegirSala} />
-            <Boton className={styles.boton}text={"Unirse a una sala"} onClick={unirseASala} />
+            <Boton
+              className={styles.boton}
+              text={"Unirse a una sala"}
+              onClick={unirseASala}
+            />
           </div>
         </main>
       </div>
-
-      /**<div className={styles.container}>
+      /**
+      <div className={styles.container}>
         <aside className={styles.sidebar}>
           <h2>Jugadores</h2>
-          <div className={styles.playerList}>
+          <ul className={styles.playerList}>
             <div className={styles.player}>Tu</div>
-            <div className={styles.player}>Jugador 1 lo mismo con un props poner nombre de Usuario</div>
+            <div className={styles.player}>
+              Jugador 1 lo mismo con un props poner nombre de Usuario
+            </div>
             <div className={styles.player}>Jugador 3</div>
             <div className={styles.player}>Jugador 4</div>
             <div className={styles.player}>Jugador 5</div>
             <div className={styles.player}>Jugador 6</div>
-          </div>
+          </ul>
         </aside>
-      </div>**/
+      </div>
+      **/
     </>
   );
 }
