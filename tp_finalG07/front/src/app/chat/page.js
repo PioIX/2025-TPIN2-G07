@@ -9,7 +9,9 @@ import Input from "../componentes/Input";
 import { useSocket } from "../hooks/useSocket";
 import Mensaje from "../componentes/Mensaje";
 
-let id = true;
+let propietario= true;
+let impostor= false;
+
 
 export default function Chat() {
   const [userList, setUserList] = useState([]);
@@ -54,21 +56,24 @@ export default function Chat() {
     <>
       <div className={styles.container}>
         <main className={styles.chatArea}>
-          <div className={styles.role}>
-            Tu rol es: <span>"ver de poner un props o id segun q sea"</span>
+          <div className={clsx(styles.role,{
+            [styles.roleImpostor]: impostor,
+            [styles.roleJugador] : !impostor
+          })}>
+            Tu rol es:{' '} <span>{impostor ? 'Impostor' : 'Jugador y tu palabra es: Pepe'}</span>
           </div>
           <div className={styles.messages}>
             {mensajes
               ? mensajes.map((mensaje, index) => (
-                  <Mensaje ID={id} key={index} texto={mensaje} />
+                  <Mensaje className={clsx(styles.message,{
+                    [styles.messagePropioImpostor] : propietario && impostor,
+                    [styles.messageOtroImpostor] : !propietario && impostor,
+                    [styles.messagePropioJugador] : propietario && !impostor,
+                    [styles.messageOtroJugador] : !propietario && !impostor
+                  })} key={index} texto={mensaje} />
                 ))
               : "error"}
           </div>
-          <div className={styles.messages}>
-            <Mensaje className={styles.messageTrue} texto={"Holaa"} />
-            <Mensaje className={styles.messageFalse} texto={"Chaoo"} />
-          </div>
-
           <div className={styles.inputRow}>
             <Input
               tipo="chat"
@@ -76,13 +81,19 @@ export default function Chat() {
               onChange={mensaje}
             />
             <Boton
-              className={styles.boton}
+              className={clsx({
+                [styles.botonImpostor] : impostor,
+                [styles.botonJugador] : !impostor
+              })}
               text="Enviar"
               onClick={enviarMensaje}
             />
             <Input onChange={elegirSala} />
             <Boton
-              className={styles.boton}
+              className={clsx({
+                [styles.botonImpostor] : impostor,
+                [styles.botonJugador] : !impostor
+              })}
               text={"Unirse a una sala"}
               onClick={unirseASala}
             />

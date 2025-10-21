@@ -28,8 +28,13 @@
   margin-bottom: 1rem;
 }
 
-.role span {
+.roleImpostor {
   color: #ff0000;
+  font-weight: 800;
+}
+
+.roleJugador {
+  color: #4a5ede;
   font-weight: 800;
 }
 
@@ -50,25 +55,35 @@
   max-width: 80%;
   padding: 0.8rem 1.2rem;
   border-radius: 2rem;
-  font-size: 3rem;
+  font-size: 1.5rem;
   color: #fff;
   word-wrap: break-word;
 }
 
-/* Si ID es true → derecha */
-.messageTrue {
+
+.messagePropioImpostor{
   align-self: flex-end;
   background: radial-gradient(circle at top left, #5f2929 0%, #a00707 100%);
-  border-top-right-radius: 3rem;
+  border-top-right-radius: 2rem;
 }
 
-/* Si ID es false → izquierda */
-.messageFalse {
+.messagePropioJugador{
+  align-self: flex-end;
+  background: radial-gradient(circle at top left, #2b2d4a 20%, #182ebe 100%);
+  border-top-right-radius: 2rem;
+}
+
+.messageOtroImpostor{                                                                                                                                                                                                       
   align-self: flex-start;
-  background: radial-gradient(circle at top left, #5f2929 50%, #a00707 100%);
-  border-top-left-radius: 3rem;
+  background: radial-gradient(circle at top left, #5f2929 0%, #a00707 100%);
+  border-top-left-radius: 2rem;
 }
 
+.messageOtroJugador{
+  align-self: flex-start;
+  background: radial-gradient(circle at top left, #2b2d4a 20%, #182ebe 100%);
+  border-top-left-radius: 2rem;
+}
 /* ====== INPUT Y BOTONES ====== */
 .inputRow {
   display: flex;
@@ -80,7 +95,7 @@
 }
 
 
-.boton {
+.botonImpostor {
   background-color: #8b0000;
   color: white;
   border: none;
@@ -89,7 +104,19 @@
   cursor: pointer;
 }
 
-.boton:hover {
+.botonJugador{
+  background-color: #2b2d4a;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.botonImpostor:hover {
   background-color: #b30000;
 }
 
+.botonJugador:hover {
+  background-color: #182ebe;
+}
