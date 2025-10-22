@@ -1,0 +1,39 @@
+.bodySala {
+  background-color: black;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+}
+
+.container1 {
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.botonSala {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  font-size: 2rem;
+  padding: 20px 40px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 30px;
+}
+.botonSala:hover {
+  color: red;
+  border: 2px solid rgb(255, 0, 0);
+  text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.7);
+}
+
+.titleSala {
+  color: rgb(202, 4, 4);
+  font-size: 5rem;
+  text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.7);
+}
+

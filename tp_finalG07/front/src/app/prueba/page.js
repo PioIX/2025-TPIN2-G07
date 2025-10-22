@@ -102,9 +102,9 @@ function mensaje(event){
 
 
         <div>
-            <Boton texto={"Ping a todos"} onClick={pingAll} />
-            <Boton texto={"Unirse a una sala"} onClick={unirseASala} />
-            <Boton texto={"Enviar mensaje"} onClick={enviarMensaje} />
+            <Boton text={"Ping a todos"} onClick={pingAll} />
+            <Boton text={"Unirse a una sala"} onClick={unirseASala} />
+            <Boton text={"Enviar mensaje"} onClick={enviarMensaje} />
             <h2>sala</h2>
             <Input onChange={elegirSala} />
              <h2>mensaje</h2>
@@ -114,7 +114,7 @@ function mensaje(event){
                 [styles.otro]: !hola
             })}>Lista de Usuarios</h1>
             {mensajes ? mensajes.map((mensaje, index) => (
-                <Mensaje key={index} texto={mensaje} />
+                <Mensaje key={index} text={mensaje} />
             )) : "error"}
             
         </div>

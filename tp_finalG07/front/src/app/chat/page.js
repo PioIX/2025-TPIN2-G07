@@ -9,8 +9,8 @@ import Input from "../componentes/Input";
 import { useSocket } from "../hooks/useSocket";
 import Mensaje from "../componentes/Mensaje";
 import { useSearchParams } from "next/navigation";
-let propietario= true;
-let impostor= false;
+let propietario = true;
+let impostor = false;
 
 
 
@@ -31,11 +31,7 @@ export default function Chat() {
 
 
 
-  useEffect(() =>{
-    socket.emit("pingAll", { msg: "Hola desde mi compu" });
-    socket.emit("joinRoom", { room: sala });
-    console.log("andando");
-  },[])
+
   useEffect(() => {
     if (!socket) return;
     socket.on("newMessage", (data) => {
@@ -46,9 +42,24 @@ export default function Chat() {
     });
   }, [socket]);
 
+  useEffect(() => {
+    const nombre = searchParams.get("nombre");
+    const sala = searchParams.get("sala");
+    if (!socket) return;
+    if (socket && socket.emit) {
+      socket.emit("joinRoom", { room: sala });
+      console.log("andando");
+    } else {
+      console.warn('socket no disponible al intentar joinRoom', socket);
+    }
+  }, [socket]);
 
   function enviarMensaje() {
-    socket.emit("sendMessage", { message: mensajeACT });
+    if (socket && socket.emit) {
+      socket.emit("sendMessage", { message: mensajeACT });
+    } else {
+      console.warn('socket no disponible al intentar enviar mensaje', socket);
+    }
   }
 
   function mensaje(event) {
@@ -59,22 +70,22 @@ export default function Chat() {
     <>
       <div className={styles.container}>
         <main className={styles.chatArea}>
-          <div className={clsx(styles.role,{
+          <div className={clsx(styles.role, {
             [styles.roleImpostor]: impostor,
-            [styles.roleJugador] : !impostor
+            [styles.roleJugador]: !impostor
           })}>
             Tu rol es:{' '} <span>{impostor ? 'Impostor' : 'Jugador y tu palabra es: Pepe'}</span>
           </div>
           <div className={styles.messages}>
             {mensajes
               ? mensajes.map((mensaje, index) => (
-                  <Mensaje className={clsx(styles.message,{
-                    [styles.messagePropioImpostor] : propietario && impostor,
-                    [styles.messageOtroImpostor] : !propietario && impostor,
-                    [styles.messagePropioJugador] : propietario && !impostor,
-                    [styles.messageOtroJugador] : !propietario && !impostor
-                  })} key={index} texto={mensaje} />
-                ))
+                <Mensaje className={clsx(styles.message, {
+                  [styles.messagePropioImpostor]: propietario && impostor,
+                  [styles.messageOtroImpostor]: !propietario && impostor,
+                  [styles.messagePropioJugador]: propietario && !impostor,
+                  [styles.messageOtroJugador]: !propietario && !impostor
+                })} key={index} texto={mensaje} />
+              ))
               : "error"}
           </div>
           <div className={styles.inputRow}>
@@ -85,8 +96,8 @@ export default function Chat() {
             />
             <Boton
               className={clsx({
-                [styles.botonImpostor] : impostor,
-                [styles.botonJugador] : !impostor
+                [styles.botonImpostor]: impostor,
+                [styles.botonJugador]: !impostor
               })}
               text="Enviar"
               onClick={enviarMensaje}
