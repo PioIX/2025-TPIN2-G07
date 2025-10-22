@@ -17,8 +17,11 @@ export default function Lobby() {
     const [contraseña, setContraseña] = useState("");
 
     function iniciar() {
-        if (nombre === "" || sala === "") {
-        router.push(`./chat?nombre=${nombre}&sala=${sala}&contraseña=${contraseña}`)
+        console.log("entrando a la pag")
+        if (nombre !== "" && sala !== "") {
+            router.push(`./chat?nombre=${nombre}&sala=${sala}`)
+             console.log("debería estar pusheando")
+        }
     }
     function nombrarUsuario(event) {
         setNombre(event.target.value)

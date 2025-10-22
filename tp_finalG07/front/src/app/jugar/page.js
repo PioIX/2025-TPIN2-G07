@@ -7,11 +7,10 @@ import Boton from '../componentes/Boton';
 import Title from '../componentes/Title';
 import { useSocket } from '../hooks/useSocket';
 import {useRouter} from 'next/navigation';
-
+import { useSearchParams } from "next/navigation";
 
 
 let siempre = true
-
 
 
 
@@ -19,7 +18,6 @@ export default function Jugar() {
    function iniciar(){
     router.push('./lobby')
     }
-    
 const router = useRouter()
 
 
