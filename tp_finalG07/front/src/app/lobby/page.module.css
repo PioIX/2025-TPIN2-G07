@@ -22,6 +22,19 @@
   color: white;
 }
 
+.list{
+  list-style-type: none;
+}
+
+.inputLobby{
+  padding: 15px; 
+  font-size: 16px; 
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  background-color: #f0f0f0; 
+  color: #333; 
+}
+
 .butonLobby {
   display: block;
   width: 100%;

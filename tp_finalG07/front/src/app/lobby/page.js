@@ -36,9 +36,9 @@ export default function Lobby() {
         <div className={styles.body}>
             <div className={styles.modalContent}>
                 <Title className={styles.titleLobby} text={"¿Qué queres hacer?"}></Title>
-                <ul>
-                    <li><Input className={styles.butonLobby} placeholder={"Nombre de Sala"} onChange={nombrarUsuario}></Input></li>
-                    <li><Input className={styles.butonLobby} placeholder={"Número de Sala"} onChange={nombrarSala}></Input></li>
+                <ul className={styles.list}>
+                    <li><Input className={styles.inputLobby} placeholder={"Nombre de Sala"} onChange={nombrarUsuario}></Input></li>
+                    <li><Input className={styles.inputLobby} placeholder={"Número de Sala"} onChange={nombrarSala}></Input></li>
                     <li><Input className={styles.butonLobby} placeholder={"Contraseña"} onChange={cambiarContraseña}></Input></li>
                 </ul>
                 <Boton className={styles.butonLobby} text={"Jugar"} onClick={iniciar}></Boton>
