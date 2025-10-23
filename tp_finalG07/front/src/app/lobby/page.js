@@ -19,7 +19,7 @@ export default function Lobby() {
     function iniciar() {
         console.log("entrando a la pag")
         if (nombre !== "" && sala !== "") {
-            router.push(`./chat?nombre=${nombre}&sala=${sala}`)
+            router.push(`./salaEspera?nombre=${nombre}&sala=${sala}`)
              console.log("debería estar pusheando")
         }
     }
