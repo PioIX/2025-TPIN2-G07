@@ -23,13 +23,31 @@ export default function Chat() {
   const [mensajeACT, setmensajeACT] = useState("");
   const [mensajes, setMensajes] = useState([]);
   const [isPopupOpen, setPopupOpen] = useState(false);
-
+  const [userList, setUserList] = useState([]);
   const searchParams = useSearchParams()
   const nombre = searchParams.get("nombre");
   const sala = searchParams.get("sala");
+
+
   console.log(`el usuario ${nombre} ingresó a la sala ${sala}`)
+  useEffect(() => {
 
 
+    async function jugadores() {
+      return await fetch(`http://localhost:4000/jugadores`)
+        .then(response => response.json())
+        .then(data => { return data });
+    }
+
+    async function fetchData() {
+      const respuesta = await jugadores();
+      console.log("Mayra: ", respuesta);           // muestra lo que llegó del servidor
+      setUserList(respuesta.mensaje);         // actualiza el estado
+    }
+    fetchData();
+
+
+  }, []);
 
 
   useEffect(() => {
@@ -105,23 +123,18 @@ export default function Chat() {
           </div>
         </main>
       </div>
-      /**
       <div className={styles.container}>
         <aside className={styles.sidebar}>
           <h2>Jugadores</h2>
           <ul className={styles.playerList}>
-            <div className={styles.player}>Tu</div>
-            <div className={styles.player}>
-              Jugador 1 lo mismo con un props poner nombre de Usuario
-            </div>
-            <div className={styles.player}>Jugador 3</div>
-            <div className={styles.player}>Jugador 4</div>
-            <div className={styles.player}>Jugador 5</div>
-            <div className={styles.player}>Jugador 6</div>
+            {userList.map((usuario) => (
+              <Mensaje className={styles.player} key={usuario.idUser} text={usuario.nombreUser}>
+                
+              </Mensaje>
+            ))}
           </ul>
         </aside>
       </div>
-      **/
     </>
   );
 }

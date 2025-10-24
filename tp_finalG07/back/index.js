@@ -109,3 +109,7 @@ app.get('/prueba', async function (req, res) {
 app.get('/usuarios', async function (req, res) {
 	res.send({ mensaje:await realizarQuery(`SELECT * FROM Usuarios`)});
 });
+
+app.get('/jugadores', async function (req, res) {
+	res.send({ mensaje:await realizarQuery(`SELECT * FROM Usuarios`)});
+});
