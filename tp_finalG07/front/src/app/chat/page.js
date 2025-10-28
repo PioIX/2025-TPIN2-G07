@@ -102,7 +102,7 @@ export default function Chat() {
                   [styles.messageOtroImpostor]: !propietario && impostor,
                   [styles.messagePropioJugador]: propietario && !impostor,
                   [styles.messageOtroJugador]: !propietario && !impostor
-                })} key={index} texto={mensaje} />
+                })} key={index} text={mensaje} />
               ))
               : "error"}
           </div>
@@ -128,9 +128,7 @@ export default function Chat() {
           <h2>Jugadores</h2>
           <ul className={styles.playerList}>
             {userList.map((usuario) => (
-              <Mensaje className={styles.player} key={usuario.idUser} text={usuario.nombreUser}>
-                
-              </Mensaje>
+              <Usuario className={styles.player} key={usuario.idUser} text={usuario.nombreUser} nombre={usuario.nombreUser} />
             ))}
           </ul>
         </aside>

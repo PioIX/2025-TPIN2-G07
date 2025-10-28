@@ -13,13 +13,13 @@ import { useSearchParams } from "next/navigation";
 let siempre = true;
 
 export default function salaEspera() {
-  const router = useRouter();
+
   const [segundos, setSegundos] = useState(0);
   const [idIntervalo, setIdIntervalo] = useState(null);
 
-
-  const searchParams = useSearchParams()
-    const nombre = searchParams.get("nombre");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const nombre = searchParams.get("nombre");
   const sala = searchParams.get("sala");
   console.log(`el usuario ${nombre} ingresó a la sala ${sala}`)
 
@@ -34,14 +34,14 @@ export default function salaEspera() {
     };
   }, []);
 
-  useEffect(()=>{
-    if(segundos == 10) 
-        {router.push(`./chat?nombre=${nombre}&sala=${sala}`)
-        console.log("debería estar pusheando")
+  useEffect(() => {
+    if (segundos == 10) {
+      router.push(`./chat?nombre=${nombre}&sala=${sala}`)
+      console.log("debería estar pusheando")
     }
-   },[segundos])
+  }, [segundos])
 
-    
+
   return (
     <>
       <div className={styles.bodySala}>

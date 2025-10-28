@@ -56,6 +56,17 @@ io.on("connection", (socket) => {
 		io.to(req.session.room).emit('chat-messages', { user: req.session.user, room: req.session.room });
 	});
 
+		socket.on('joinRoom', data => {
+		console.log("🚀 ~ io.on ~ req.session.room:", req.session.room)
+		if (req.session.room != undefined)
+			socket.leave(req.session.room);
+		req.session.room = data.room;
+		socket.join(req.session.room);
+
+		io.to(req.session.room).emit('chat-messages', { user: req.session.user, room: req.session.room });
+	});
+
+
 	socket.on('pingAll', data => {
 		console.log("PING ALL: ", data);
 		io.emit('pingAll', { event: "Ping to all", message: data });
@@ -116,9 +127,17 @@ app.get('/jugadores', async function (req, res) {
 
 app.get('/usuarios', async function (req, res) {
 	check = await realizarQuery(`SELECT * FROM Usuarios WHERE username = "${req.body.username}  && password = ${req.body.password}"`)
-	if (check.length < 0) {
+	if (check.length = 0) {
 		res.send({ mensaje: "El nombre o la contraseña no coincide" })
 	} else {
 		res.send(await realizarQuery(`SELECT id_usuario FROM Usuarios WHERE username = '${req.body.username}'`))
 	}
+});
+
+app.get('/jugadores', async function (req, res) {
+	res.send({ mensaje: await realizarQuery(`SELECT * FROM Usuarios`) });
+});
+
+app.get('/jugadores', async function (req, res) {
+	res.send({ mensaje: await realizarQuery(`SELECT * FROM Usuarios`) });
 });

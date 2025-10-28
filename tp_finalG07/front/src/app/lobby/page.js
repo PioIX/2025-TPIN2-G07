@@ -16,11 +16,15 @@ export default function Lobby() {
     const [sala, setSala] = useState("");
     const [contraseña, setContraseña] = useState("");
 
-    function iniciar() {
-        console.log("entrando a la pag")
+    function unirse() {
         if (nombre !== "" && sala !== "") {
-            router.push(`./salaEspera?nombre=${nombre}&sala=${sala}`)
-             console.log("debería estar pusheando")
+            router.push(`./salaEspera?nombre=${nombre}&sala=${sala}`);
+        }
+    }
+    function crear() {
+        if (nombre !== "" && sala !== "") {
+            
+            router.push(`./salaEspera?nombre=${nombre}&sala=${sala}`);
         }
     }
     function nombrarUsuario(event) {
@@ -39,9 +43,9 @@ export default function Lobby() {
                 <ul className={styles.list}>
                     <li><Input className={styles.inputLobby} placeholder={"Nombre de Sala"} onChange={nombrarUsuario}></Input></li>
                     <li><Input className={styles.inputLobby} placeholder={"Número de Sala"} onChange={nombrarSala}></Input></li>
-                    <li><Input className={styles.butonLobby} placeholder={"Contraseña"} onChange={cambiarContraseña}></Input></li>
                 </ul>
-                <Boton className={styles.butonLobby} text={"Jugar"} onClick={iniciar}></Boton>
+                <Boton className={styles.butonLobby} text={"unirse"} onClick={unirse}></Boton>
+                <Boton className={styles.butonLobby} text={"crear"} onClick={crear}></Boton>
             </div>
         </div>
     </>

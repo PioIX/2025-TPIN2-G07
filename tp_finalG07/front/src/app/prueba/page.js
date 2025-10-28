@@ -13,13 +13,6 @@ import Mensaje from '../componentes/Mensaje';
 
 
 
-const users = [
-    {id:1, name:'pepe', image: 'https://robohash.org/user1'},
-    {id:2, name:'papo', image: 'https://robohash.org/user2'},
-    {id:3, name:'pili', image: 'https://robohash.org/user3'}
-]
-
-
 //map
 const names = ['pepe', 'pedro', 'papo'];
 const holaNames = names.map((name) => 'hola ' + name);
