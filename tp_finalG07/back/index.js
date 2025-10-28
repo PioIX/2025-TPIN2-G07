@@ -49,7 +49,7 @@ io.on("connection", (socket) => {
 	socket.on('joinRoom', data => {
 		console.log("🚀 ~ io.on ~ req.session.room:", req.session.room)
 		if (req.session.room != undefined)
-		socket.leave(req.session.room);
+			socket.leave(req.session.room);
 		req.session.room = data.room;
 		socket.join(req.session.room);
 
@@ -71,45 +71,54 @@ io.on("connection", (socket) => {
 });
 
 app.get('/', function (req, res) {
-    res.status(200).send({
-        message: 'GET Home route working fine!'
-    });
+	res.status(200).send({
+		message: 'GET Home route working fine!'
+	});
 });
 
 app.get('/traerUsuarios', async function (req, res) {
-    try {
-        let respuesta = await realizarQuery(`SELECT * FROM Usuarios WHERE username = "${req.query.username}"`)
-        res.send({ mensaje: respuesta })
-    } catch (error) {
-        res.send({ mensaje: "error", error })
-    }
+	try {
+		let respuesta = await realizarQuery(`SELECT * FROM Usuarios WHERE username = "${req.query.username}"`)
+		res.send({ mensaje: respuesta })
+	} catch (error) {
+		res.send({ mensaje: "error", error })
+	}
 })
 
 app.post('/crearUsuario', async function (req, res) {
-    try {
-        check = await realizarQuery(`SELECT * FROM Usuarios WHERE username = "${req.body.username}"`)
-        if (check.length > 0) {
-            res.send({ mensaje: "El usuario ya existe" })
-        } else {
-            await realizarQuery(`INSERT INTO Usuarios (username, password, record) VALUES/n
+	try {
+		check = await realizarQuery(`SELECT * FROM Usuarios WHERE username = "${req.body.username}"`)
+		if (check.length > 0) {
+			res.send({ mensaje: "El usuario ya existe" })
+		} else {
+			await realizarQuery(`INSERT INTO Usuarios (username, password, record) VALUES/n
             ('${req.body.username}', '${req.body.password}', ${req.body.record})`)
-            res.send(await realizarQuery(`SELECT id_usuario FROM Usuarios WHERE username = '${req.body.username}'`))
-        }
+			res.send(await realizarQuery(`SELECT id_usuario FROM Usuarios WHERE username = '${req.body.username}'`))
+		}
 
-    } catch (error) {
-        res.send({ mensaje: "error", error })
-    }
+	} catch (error) {
+		res.send({ mensaje: "error", error })
+	}
 
 })
 
 app.get('/prueba', async function (req, res) {
-	res.send({ mensaje:await realizarQuery(`SELECT * FROM Users`)});
+	res.send({ mensaje: await realizarQuery(`SELECT * FROM Users`) });
 });
 
 app.get('/usuarios', async function (req, res) {
-	res.send({ mensaje:await realizarQuery(`SELECT * FROM Usuarios`)});
+	res.send({ mensaje: await realizarQuery(`SELECT * FROM Usuarios`) });
 });
 
 app.get('/jugadores', async function (req, res) {
-	res.send({ mensaje:await realizarQuery(`SELECT * FROM Usuarios`)});
+	res.send({ mensaje: await realizarQuery(`SELECT * FROM Usuarios`) });
+});
+
+app.get('/usuarios', async function (req, res) {
+	check = await realizarQuery(`SELECT * FROM Usuarios WHERE username = "${req.body.username}  && password = ${req.body.password}"`)
+	if (check.length < 0) {
+		res.send({ mensaje: "El nombre o la contraseña no coincide" })
+	} else {
+		res.send(await realizarQuery(`SELECT id_usuario FROM Usuarios WHERE username = '${req.body.username}'`))
+	}
 });
