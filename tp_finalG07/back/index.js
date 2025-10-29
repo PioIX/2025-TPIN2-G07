@@ -122,7 +122,7 @@ app.get('/usuarios', async function (req, res) {
 
 app.get('/jugadores', async function (req, res) {
 	try {
-		const resultado = await realizarQuery(`SELECT * FROM Usuarios`);
+		const resultado = await realizarQuery(`SELECT * FROM Usuarios where idUser = "${req.body.id}"`);
 		res.send({ mensaje: resultado });
 	} catch (error) {
 		console.error("Error al traer jugadores:", error);
