@@ -9,127 +9,156 @@ import Input from "../componentes/Input";
 import { useSocket } from "../hooks/useSocket";
 import Mensaje from "../componentes/Mensaje";
 import { useSearchParams } from "next/navigation";
+
+// Variables de estado (pueden ser luego dinámicas según el rol del jugador)
 let propietario = true;
 let impostor = false;
 
-
-
-
-
 export default function Chat() {
   const { socket, isconnected } = useSocket();
-  const [message, setMessage] = useState("");
-  const [salaACT, setSalaACT] = useState(0);
-  const [mensajeACT, setmensajeACT] = useState("");
+  const [mensajeACT, setMensajeACT] = useState("");
   const [mensajes, setMensajes] = useState([]);
-  const [isPopupOpen, setPopupOpen] = useState(false);
   const [userList, setUserList] = useState([]);
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
   const sala = searchParams.get("sala");
 
+  console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
 
-  console.log(`el usuario ${nombre} ingresó a la sala ${sala}`)
+  // 🔹 Trae lista de jugadores desde el backend
   useEffect(() => {
-
-
     async function jugadores() {
-      return await fetch(`http://localhost:4000/jugadores`)
-        .then(response => response.json())
-        .then(data => { return data });
+      try {
+        const res = await fetch("http://localhost:4000/jugadores", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+
+        const data = await res.json();
+        console.log("🎮 Jugadores obtenidos:", data);
+        setUserList(data.mensaje || []);
+      } catch (error) {
+        console.error("❌ Error al conectar con el servidor:", error);
+      }
     }
 
-    async function fetchData() {
-      const respuesta = await jugadores();
-      console.log("Mayra: ", respuesta);           // muestra lo que llegó del servidor
-      setUserList(respuesta.mensaje);         // actualiza el estado
-    }
-    fetchData();
-
-
+    jugadores();
   }, []);
 
-
+  // 🔹 Escucha nuevos mensajes desde el socket
   useEffect(() => {
     if (!socket) return;
+
     socket.on("newMessage", (data) => {
       console.log(
-        "Nuevo mensaje en la sala " + data.room + ": " + data.message.message
+        `💬 Nuevo mensaje en sala ${data.room}: ${data.message.message}`
       );
-      setMensajes((prevMensajes) => [...prevMensajes, data.message.message]);
+      setMensajes((prev) => [...prev, data.message.message]);
     });
+
+    // Limpieza al desmontar
+    return () => socket.off("newMessage");
   }, [socket]);
 
+  // 🔹 Conexión del usuario a la sala
   useEffect(() => {
-    const nombre = searchParams.get("nombre");
-    const sala = searchParams.get("sala");
     if (!socket) return;
     if (socket && socket.emit) {
       socket.emit("joinRoom", { room: sala });
-      console.log("andando");
+      console.log("✅ Usuario unido a la sala:", sala);
     } else {
-      console.warn('socket no disponible al intentar joinRoom', socket);
+      console.warn("⚠️ Socket no disponible al intentar joinRoom");
     }
-  }, [socket]);
+  }, [socket, sala]);
 
+  // 🔹 Envía mensaje
   function enviarMensaje() {
-    if (socket && socket.emit) {
+    if (socket && socket.emit && mensajeACT.trim() !== "") {
       socket.emit("sendMessage", { message: mensajeACT });
+      setMensajes((prev) => [...prev, mensajeACT]); // se muestra también localmente
+      setMensajeACT(""); // limpia el input
     } else {
-      console.warn('socket no disponible al intentar enviar mensaje', socket);
+      console.warn("⚠️ No se puede enviar mensaje vacío o sin conexión.");
     }
   }
 
-  function mensaje(event) {
-    setmensajeACT(event.target.value);
+  // 🔹 Captura input de mensaje
+  function manejarCambio(event) {
+    setMensajeACT(event.target.value);
   }
-  let hola = true;
+
   return (
     <>
       <div className={styles.container}>
         <main className={styles.chatArea}>
-          <div className={clsx(styles.role, {
-            [styles.roleImpostor]: impostor,
-            [styles.roleJugador]: !impostor
-          })}>
-            Tu rol es:{' '} <span>{impostor ? 'Impostor' : 'Jugador y tu palabra es: Pepe'}</span>
+          {/* ROL DEL JUGADOR */}
+          <div
+            className={clsx(styles.role, {
+              [styles.roleImpostor]: impostor,
+              [styles.roleJugador]: !impostor,
+            })}
+          >
+            Tu rol es:{" "}
+            <span>{impostor ? "Impostor" : "Jugador y tu palabra es: Pepe"}</span>
           </div>
+
+          {/* MENSAJES */}
           <div className={styles.messages}>
-            {mensajes
-              ? mensajes.map((mensaje, index) => (
-                <Mensaje className={clsx(styles.message, {
-                  [styles.messagePropioImpostor]: propietario && impostor,
-                  [styles.messageOtroImpostor]: !propietario && impostor,
-                  [styles.messagePropioJugador]: propietario && !impostor,
-                  [styles.messageOtroJugador]: !propietario && !impostor
-                })} key={index} text={mensaje} />
+            {mensajes.length > 0 ? (
+              mensajes.map((mensaje, index) => (
+                <Mensaje
+                  key={index}
+                  className={clsx(styles.message, {
+                    [styles.messagePropioImpostor]: propietario && impostor,
+                    [styles.messageOtroImpostor]: !propietario && impostor,
+                    [styles.messagePropioJugador]: propietario && !impostor,
+                    [styles.messageOtroJugador]: !propietario && !impostor,
+                  })}
+                  text={mensaje}
+                />
               ))
-              : "error"}
+            ) : (
+              <p>No hay mensajes todavía.</p>
+            )}
           </div>
+
+          {/* INPUT Y BOTÓN DE ENVÍO */}
           <div className={styles.inputRow}>
             <Input
               tipo="chat"
               placeholder="Escribí un mensaje..."
-              onChange={mensaje}
+              value={mensajeACT}
+              onChange={manejarCambio}
             />
             <Boton
               className={clsx({
                 [styles.botonImpostor]: impostor,
-                [styles.botonJugador]: !impostor
+                [styles.botonJugador]: !impostor,
               })}
               text="Enviar"
               onClick={enviarMensaje}
             />
           </div>
         </main>
-      </div>
-      <div className={styles.container}>
+
+        {/* SIDEBAR DE JUGADORES */}
         <aside className={styles.sidebar}>
           <h2>Jugadores</h2>
           <ul className={styles.playerList}>
-            {userList.map((usuario) => (
-              <Usuario className={styles.player} key={usuario.idUser} text={usuario.nombreUser} nombre={usuario.nombreUser} />
-            ))}
+            {userList.length > 0 ? (
+              userList.map((usuario) => (
+                <Usuario
+                  key={usuario.idUser}
+                  className={styles.player}
+                  text={usuario.nombreUser}
+                  nombre={usuario.nombreUser}
+                />
+              ))
+            ) : (
+              <p>No hay jugadores conectados.</p>
+            )}
           </ul>
         </aside>
       </div>

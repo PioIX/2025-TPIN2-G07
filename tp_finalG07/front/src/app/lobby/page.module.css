@@ -1,52 +1,124 @@
+/* Fondo rojo ocupa toda la pantalla */
 .body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh;
+  background-color: #3a0000; /* rojo oscuro dominante */
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
 }
 
+/* Contenedor general (ocupa todo) */
 .modalContent {
-  background-color: #3a0000;
-  padding: 15% ;
+  width: 100%;
+  height: 100%;
   text-align: center;
-  border-radius: 5px;
+  padding: 4rem 2rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Título principal */
 .titleLobby {
   font-size: 3rem;
   font-weight: bold;
-  margin-bottom: 50px;
+  margin-bottom: 3rem;
   color: white;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
 }
 
-.list{
-  list-style-type: none;
-}
-
-.inputLobby{
-  padding: 15px; 
-  font-size: 16px; 
-  border: 1px solid #ccc; 
-  border-radius: 5px; 
-  background-color: #f0f0f0; 
-  color: #333; 
-}
-
-.butonLobby {
-  display: block;
+/* Inputs en lista centrada */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   width: 100%;
-  padding: 12px 20px;
-  margin: 10px 0;
-  background: transparent;
-  border: 2px solid gray;
-  color: white;
-  font-size: 1em;
+  max-width: 500px;
+}
+
+/* INPUT ESTÉTICO SIEMPRE BLANCO */
+.inputLobby {
+  width: 100%;
+  padding: 18px 24px;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 12px;
+  background: #ffffff; /* siempre blanco */
+  color: #3a0000;
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.inputLobby::placeholder {
+  color: #7b4a4a;
+  opacity: 0.8;
+}
+
+.inputLobby:focus {
+  outline: none;
+  transform: scale(1.03);
+  background: #ffffff; /* se mantiene blanco al foco */
+  box-shadow:
+    0 0 15px rgba(255, 255, 255, 0.4),
+    inset 0 2px 6px rgba(255, 255, 255, 0.8);
+}
+
+/* BOTONES */
+.butonLobby {
+  width: 100%;
+  max-width: 500px;
+  padding: 16px 24px;
+  background: white;
+  border: none;
+  border-radius: 10px;
+  color: #3a0000;
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Separación entre los dos botones */
+.butonLobby + .butonLobby {
+  margin-top: 25px; /* más distancia entre botones */
 }
 
 .butonLobby:hover {
-  background: white;
-  color: #3a0000;
+  background: #ff0000;
+  color: white;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+}
+
+.butonLobby:active {
+  transform: scale(0.97);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .titleLobby {
+    font-size: 2.4rem;
+  }
+
+  .inputLobby {
+    font-size: 1rem;
+    padding: 14px 18px;
+  }
+
+  .butonLobby {
+    font-size: 1rem;
+  }
 }

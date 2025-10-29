@@ -121,9 +121,6 @@ app.get('/usuarios', async function (req, res) {
 	res.send({ mensaje: await realizarQuery(`SELECT * FROM Usuarios`) });
 });
 
-app.get('/jugadores', async function (req, res) {
-	res.send({ mensaje: await realizarQuery(`SELECT * FROM Usuarios`) });
-});
 
 app.get('/usuarios', async function (req, res) {
 	check = await realizarQuery(`SELECT * FROM Usuarios WHERE username = "${req.body.username}  && password = ${req.body.password}"`)
@@ -135,9 +132,11 @@ app.get('/usuarios', async function (req, res) {
 });
 
 app.get('/jugadores', async function (req, res) {
-	res.send({ mensaje: await realizarQuery(`SELECT * FROM Usuarios`) });
-});
-
-app.get('/jugadores', async function (req, res) {
-	res.send({ mensaje: await realizarQuery(`SELECT * FROM Usuarios`) });
+	try {
+		const resultado = await realizarQuery(`SELECT * FROM Usuarios`);
+		res.send({ mensaje: resultado });
+	} catch (error) {
+		console.error("Error al traer jugadores:", error);
+		res.status(500).send({ mensaje: "error", error });
+	}
 });
