@@ -16,7 +16,7 @@ let siempre = true
 
 export default function Jugar() {
    function iniciar(){
-    router.push('./lobby')
+    router.push('./login')
     }
 const router = useRouter()
 

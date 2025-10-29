@@ -43,7 +43,6 @@ export default function Chat() {
         console.error("❌ Error al conectar con el servidor:", error);
       }
     }
-
     jugadores();
   }, []);
 
