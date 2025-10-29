@@ -56,17 +56,6 @@ io.on("connection", (socket) => {
 		io.to(req.session.room).emit('chat-messages', { user: req.session.user, room: req.session.room });
 	});
 
-		socket.on('joinRoom', data => {
-		console.log("🚀 ~ io.on ~ req.session.room:", req.session.room)
-		if (req.session.room != undefined)
-			socket.leave(req.session.room);
-		req.session.room = data.room;
-		socket.join(req.session.room);
-
-		io.to(req.session.room).emit('chat-messages', { user: req.session.user, room: req.session.room });
-	});
-
-
 	socket.on('pingAll', data => {
 		console.log("PING ALL: ", data);
 		io.emit('pingAll', { event: "Ping to all", message: data });
@@ -137,6 +126,6 @@ app.get('/jugadores', async function (req, res) {
 		res.send({ mensaje: resultado });
 	} catch (error) {
 		console.error("Error al traer jugadores:", error);
-		res.status(500).send({ mensaje: "error", error });
+		res.send({ mensaje: "error", error });
 	}
 });

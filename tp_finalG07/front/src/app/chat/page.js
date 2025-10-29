@@ -12,7 +12,7 @@ import { useSearchParams } from "next/navigation";
 
 // Variables de estado (pueden ser luego dinámicas según el rol del jugador)
 let propietario = true;
-let impostor = false;
+let impostor = true;
 
 export default function Chat() {
   const { socket, isconnected } = useSocket();
@@ -77,7 +77,7 @@ export default function Chat() {
   function enviarMensaje() {
     if (socket && socket.emit && mensajeACT.trim() !== "") {
       socket.emit("sendMessage", { message: mensajeACT });
-      setMensajes((prev) => [...prev, mensajeACT]); // se muestra también localmente
+   //   setMensajes((prev) => [...prev, mensajeACT]); // se muestra también localmente
       setMensajeACT(""); // limpia el input
     } else {
       console.warn("⚠️ No se puede enviar mensaje vacío o sin conexión.");
@@ -101,27 +101,24 @@ export default function Chat() {
             })}
           >
             Tu rol es:{" "}
-            <span>{impostor ? "Impostor" : "Jugador y tu palabra es: Pepe"}</span>
+            <span>
+              {impostor ? "Impostor" : "Jugador y tu palabra es: Pepe"}
+            </span>
           </div>
 
-          {/* MENSAJES */}
           <div className={styles.messages}>
-            {mensajes.length > 0 ? (
-              mensajes.map((mensaje, index) => (
-                <Mensaje
-                  key={index}
-                  className={clsx(styles.message, {
-                    [styles.messagePropioImpostor]: propietario && impostor,
-                    [styles.messageOtroImpostor]: !propietario && impostor,
-                    [styles.messagePropioJugador]: propietario && !impostor,
-                    [styles.messageOtroJugador]: !propietario && !impostor,
-                  })}
-                  text={mensaje}
-                />
-              ))
-            ) : (
-              <p>No hay mensajes todavía.</p>
-            )}
+            {mensajes.map((mensaje, index) => (
+              <Mensaje
+                key={index}
+                className={clsx(styles.message, {
+                  [styles.messagePropioImpostor]: propietario && impostor,
+                  [styles.messageOtroImpostor]: !propietario && impostor,
+                  [styles.messagePropioJugador]: propietario && !impostor,
+                  [styles.messageOtroJugador]: !propietario && !impostor,
+                })}
+                text={mensaje}
+              />
+            ))}
           </div>
 
           {/* INPUT Y BOTÓN DE ENVÍO */}
