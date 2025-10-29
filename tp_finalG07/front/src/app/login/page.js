@@ -9,9 +9,9 @@ import styles from "./page.module.css";
 export default function Login() {
   const [nombre, setNombre] = useState("");
   const [contraseña, setContraseña] = useState("");
-  const [mensaje, setMensaje] = useState("");
   const [nuevoUsuario, setNuevo] = useState(false);
   const router = useRouter();
+  
 
   function modificarNombre(event) {
     setNombre(event.target.value);
@@ -30,9 +30,7 @@ export default function Login() {
       body: JSON.stringify(dato),
     })
       .then((response) => response.json())
-      .then((data) => {
-        return data;
-      });
+      .then((data) => data);
   }
 
   async function buscarUsuario(dato) {
@@ -42,30 +40,33 @@ export default function Login() {
       body: JSON.stringify(dato),
     })
       .then((response) => response.json())
-      .then((data) => {
-        return data;
-      });
+      .then((data) => data);
   }
 
   async function ingresar() {
+    let respuesta;
     if (nuevoUsuario) {
-      const respuesta = await crearUsuario({
-        username: nombre,
-        password: contraseña,
+      respuesta = await crearUsuario({
+        nombre: nombre,
+        contraseña: contraseña,
+        
       });
-      console.log(respuesta);
+      router.push('./lobby')
     } else {
-      const respuesta = await buscarUsuario({
-        username: nombre,
-        password: contraseña,
+      respuesta = await buscarUsuario({
+        nombre: nombre,
+        contraseña: contraseña,
+        
       });
-      console.log(respuesta);
-    }
-    localStorage.setItem("id", usuarios);
-  }
+      router.push('./lobby');
+    }}
 
-  return (
-    <>
+   
+      
+  
+
+    
+  return <>
       <div className={styles.body}>
         <div className={styles.container}>
           <h1 className={styles.header}>Iniciar Sesión</h1>
@@ -76,21 +77,21 @@ export default function Login() {
             placeholder="Nombre"
             value={nombre}
             onChange={modificarNombre}
-          ></Input>
+          />
           <Input
             className={styles.inputLogin}
             tipo="login"
             placeholder="Contraseña"
             value={contraseña}
             onChange={modificarContraseña}
-          ></Input>
+          />
 
           <div className={styles.row}>
             <h2 className={styles.h2}>¿Eres nuevo?</h2>
             <input
               type="checkbox"
               onChange={checkboxActivado}
-              checked={nuevoUsuario}
+
             />
           </div>
 
@@ -99,9 +100,8 @@ export default function Login() {
             text="INGRESAR"
             tipo="login"
             onClick={ingresar}
-          ></Boton>
+          />
         </div>
       </div>
-    </>
-  );
+    </>;
 }
