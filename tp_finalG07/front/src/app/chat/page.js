@@ -9,8 +9,8 @@ import Input from "../componentes/Input";
 import { useSocket } from "../hooks/useSocket";
 import Mensaje from "../componentes/Mensaje";
 import { useSearchParams } from "next/navigation";
+import { jugadores } from "../fetch/fetch";
 
-// Variables de estado (pueden ser luego dinámicas según el rol del jugador)
 let propietario = true;
 let impostor = true;
 
@@ -25,28 +25,10 @@ export default function Chat() {
 
   console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
 
-  // 🔹 Trae lista de jugadores desde el backend
   useEffect(() => {
-    async function jugadores() {
-      try {
-        const res = await fetch("http://localhost:4000/jugadores", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
-
-        const data = await res.json();
-        console.log("🎮 Jugadores obtenidos:", data);
-        setUserList(data.mensaje || []);
-      } catch (error) {
-        console.error("❌ Error al conectar con el servidor:", error);
-      }
-    }
     jugadores();
   }, []);
 
-  // 🔹 Escucha nuevos mensajes desde el socket
   useEffect(() => {
     if (!socket) return;
 
@@ -82,8 +64,6 @@ export default function Chat() {
       console.warn("⚠️ No se puede enviar mensaje vacío o sin conexión.");
     }
   }
-
-  // 🔹 Captura input de mensaje
   function manejarCambio(event) {
     setMensajeACT(event.target.value);
   }
@@ -92,7 +72,6 @@ export default function Chat() {
     <>
       <div className={styles.container}>
         <main className={styles.chatArea}>
-          {/* ROL DEL JUGADOR */}
           <div
             className={clsx(styles.role, {
               [styles.roleImpostor]: impostor,
