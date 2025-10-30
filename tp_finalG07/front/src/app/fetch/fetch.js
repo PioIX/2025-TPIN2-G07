@@ -14,3 +14,25 @@ export async function jugadores() {
         console.error("❌ Error al conectar con el servidor:", error);
       }
     }
+
+
+  export async function crearUsuario(dato){
+    await fetch(`http://localhost:4000/crearUsuario`, {
+        method: "POST",
+        headers: {"Content-Type" : "application/json"},
+        body: JSON.stringify(dato)
+    })
+    .then(response => response.json())
+    .then(data => {return data});
+}
+
+
+     async function  buscarUsuario(dato){
+    await fetch(`http://localhost:4000/buscarUsuario`, {
+        method: "POST",
+        headers: {"Content-Type" : "application/json"},
+        body: JSON.stringify(dato)
+    })
+    .then(response => response.json())
+    .then(data => {return data});
+}

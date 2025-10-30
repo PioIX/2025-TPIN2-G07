@@ -85,23 +85,6 @@ app.get('/traerUsuarios', async function (req, res) {
 	}
 })
 
-app.post('/crearUsuario', async function (req, res) {
-	try {
-		check = await realizarQuery(`SELECT * FROM Usuarios WHERE username = "${req.body.username}"`)
-		if (check.length > 0) {
-			res.send({ mensaje: "El usuario ya existe" })
-		} else {
-			await realizarQuery(`INSERT INTO Usuarios (username, password, record) VALUES/n
-            ('${req.body.username}', '${req.body.password}', ${req.body.record})`)
-			res.send(await realizarQuery(`SELECT id_usuario FROM Usuarios WHERE username = '${req.body.username}'`))
-		}
-
-	} catch (error) {
-		res.send({ mensaje: "error", error })
-	}
-
-})
-
 app.get('/prueba', async function (req, res) {
 	res.send({ mensaje: await realizarQuery(`SELECT * FROM Users`) });
 });
@@ -129,3 +112,33 @@ app.get('/jugadores', async function (req, res) {
 		res.send({ mensaje: "error", error });
 	}
 });
+
+app.post('/crearUsuario', async function (req, res) {
+	try {
+		check = await realizarQuery(`SELECT * FROM Usuarios WHERE nombre = "${req.body.nombre}"`)
+		if (check.length > 0) {
+			res.send({ mensaje: "El usuario ya existe" })
+		} else {
+			await realizarQuery(`INSERT INTO Usuarios (nombre) VALUES/n
+            ('${req.body.nombre}'`)
+			res.send(await realizarQuery(`SELECT idUser FROM Usuarios WHERE nombre = '${req.body.nombre}'`))
+		}
+	} catch (error) {
+		res.send({ mensaje: "error", error })
+	}
+
+})
+
+app.get('/buscarUsuario', async function (req, res) {
+	try {
+		check = await realizarQuery(`SELECT * FROM Usuarios WHERE nombre = "${req.body.nombre}"`)
+		if (check.length = 0) {
+			res.send({ mensaje: "El usuario no existe" })
+		} else {
+			res.send(await realizarQuery(`SELECT idUser FROM Usuarios WHERE nombre = '${req.body.nombre}'`))
+		}
+	} catch (error) {
+		res.send({ mensaje: "error", error })
+	}
+
+})
