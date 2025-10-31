@@ -129,13 +129,14 @@ app.post('/crearUsuario', async function (req, res) {
 
 })
 
-app.get('/buscarUsuario', async function (req, res) {
+app.post('/buscarUsuario', async function (req, res) {
 	try {
-		check = await realizarQuery(`SELECT * FROM Usuarios WHERE nombre = "${req.body.nombre}"`)
+		check = await realizarQuery(`SELECT * FROM Usuarios WHERE nombre = "${req.body.nombre}" && contraseña ="${req.body.nombre}"`)
 		if (check.length = 0) {
 			res.send({ mensaje: "El usuario no existe" })
 		} else {
-			res.send(await realizarQuery(`SELECT idUser FROM Usuarios WHERE nombre = '${req.body.nombre}'`))
+			id = await realizarQuery(`SELECT idUser FROM Usuarios WHERE nombre = '${req.body.nombre}'`)
+			res.send(id)
 		}
 	} catch (error) {
 		res.send({ mensaje: "error", error })

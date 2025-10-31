@@ -27,7 +27,7 @@ export async function jugadores() {
 }
 
 
-     async function  buscarUsuario(dato){
+  export async function  buscarUsuario(dato){
     await fetch(`http://localhost:4000/buscarUsuario`, {
         method: "POST",
         headers: {"Content-Type" : "application/json"},
