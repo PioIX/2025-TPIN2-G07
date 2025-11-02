@@ -17,22 +17,22 @@ export async function jugadores() {
 
 
   export async function crearUsuario(dato){
-    await fetch(`http://localhost:4000/crearUsuario`, {
+    const response = await fetch(`http://localhost:4000/crearUsuario`, {
         method: "POST",
         headers: {"Content-Type" : "application/json"},
         body: JSON.stringify(dato)
     })
-    .then(response => response.json())
-    .then(data => {return data});
+  const data = await response.json();
+  return data;
 }
 
 
   export async function  buscarUsuario(dato){
-    await fetch(`http://localhost:4000/buscarUsuario`, {
+    const response = await fetch(`http://localhost:4000/buscarUsuario`, {
         method: "POST",
         headers: {"Content-Type" : "application/json"},
         body: JSON.stringify(dato)
     })
-    .then(response => response.json())
-    .then(data => {return data});
+  const data = await response.json();
+  return data;
 }

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { buscarUsuario } from '../fetch/fetch';
+import { crearUsuario } from '../fetch/fetch';
 //import {buscarUsuario, crearUsuario} from "../fetch/fetch";
 
 export default function Login() {
@@ -18,12 +19,12 @@ export default function Login() {
 
   async function ingresar() {
     if (nuevoUsuario) {
-      const respuesta = await crearUsuario({ nombre: nombre, contraseña: contraseña, });
+      const respuesta = await crearUsuario({ nombre: nombre, contraseña: contraseña});
       console.log(respuesta);
       localStorage.setItem("id", respuesta.idUser);
       router.push('./lobby')
     } else {
-      const respuesta = await buscarUsuario({ nombre: nombre, contraseña: contraseña, idUser: idUser });
+      const respuesta = await buscarUsuario({ nombre: nombre, contraseña: contraseña});
       console.log(respuesta);
       localStorage.setItem("id", respuesta.idUser);
       router.push('./lobby')
@@ -34,7 +35,7 @@ export default function Login() {
     setNombre(event.target.value)
   }
   function modificarContraseña(event) {
-    setNombre(event.target.value)
+    setContraseña(event.target.value)
   }
   function checkboxActivado(event) {
     setNuevo(event.target.checked)
