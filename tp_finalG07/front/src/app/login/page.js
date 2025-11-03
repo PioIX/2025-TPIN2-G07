@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { buscarUsuario } from '../fetch/fetch';
 import { crearUsuario } from '../fetch/fetch';
+import { useSearchParams } from "next/navigation";
 //import {buscarUsuario, crearUsuario} from "../fetch/fetch";
 
 export default function Login() {
@@ -16,18 +17,18 @@ export default function Login() {
   const [mensaje, setMensaje] = useState("");
   const [nuevoUsuario, setNuevo] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   async function ingresar() {
     if (nuevoUsuario) {
-      const respuesta = await crearUsuario({ nombre: nombre, contraseña: contraseña});
+      const respuesta = await crearUsuario({ nombre: nombre, contraseña: contraseña });
       console.log(respuesta);
-      localStorage.setItem("id", respuesta.idUser);
-      router.push('./lobby')
+
+      router.push(`./lobby?id=${respuesta.idUser}`);
     } else {
-      const respuesta = await buscarUsuario({ nombre: nombre, contraseña: contraseña});
+      const respuesta = await buscarUsuario({ nombre: nombre, contraseña: contraseña });
       console.log(respuesta);
-      localStorage.setItem("id", respuesta.idUser);
-      router.push('./lobby')
+      router.push(`./lobby?id=${respuesta[0].idUser}`);
     }
 
   }

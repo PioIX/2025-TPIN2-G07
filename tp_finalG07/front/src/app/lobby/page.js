@@ -14,9 +14,10 @@ export default function Lobby() {
     const router = useRouter();
     const [nombre, setNombre] = useState("");
     const [sala, setSala] = useState("");
+      const id = searchParams.get("id");
     function unirse() {
         if (nombre !== "" && sala !== "") {
-            router.push(`./salaEspera?nombre=${nombre}&sala=${sala}`);
+            router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&sid=${id}`);
         }
     }
     function crear() {

@@ -115,12 +115,15 @@ app.get('/jugadores', async function (req, res) {
 
 app.post('/crearUsuario', async function (req, res) {
 	try {
-		check = await realizarQuery(`SELECT * FROM Usuarios WHERE nombre = "${req.body.nombre}"`)
+		let check = await realizarQuery(`SELECT * FROM Usuarios WHERE nombre = "${req.body.nombre}"`)
 		if (check.length > 0) {
 			res.send({ mensaje: "El usuario ya existe" })
 		} else {
-			await realizarQuery(`INSERT INTO Usuarios (nombre) VALUES/n
-            ('${req.body.nombre}'`)
+			console.log(req.body)
+			await realizarQuery(`INSERT INTO Usuarios (nombre, contraseña) VALUES
+            ("${req.body.nombre}", "${req.body.contraseña}")`)
+			let resTemp = await realizarQuery(`SELECT idUser FROM Usuarios WHERE nombre = "${req.body.nombre}"`)
+			await realizarQuery(`UPDATE Usuarios SET fotoPerfil = "https://robohash.org/${resTemp[0].idUser}" WHERE idUser = ${resTemp[0].idUser}`)
 			res.send(await realizarQuery(`SELECT idUser FROM Usuarios WHERE nombre = '${req.body.nombre}'`))
 		}
 	} catch (error) {

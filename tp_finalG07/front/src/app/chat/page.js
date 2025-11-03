@@ -117,8 +117,6 @@ export default function Chat() {
             />
           </div>
         </main>
-
-        {/* SIDEBAR DE JUGADORES */}
         <aside className={styles.sidebar}>
           <h2>Jugadores</h2>
           <ul className={styles.playerList}>
