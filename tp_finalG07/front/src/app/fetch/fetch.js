@@ -36,6 +36,7 @@ export async function jugadores() {
 
 
   export async function crearSala(dato){
+    console.log(dato)
     const response = await fetch(`http://localhost:4000/crearSala`, {
         method: "POST",
         headers: {"Content-Type" : "application/json"},
