@@ -1,11 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import clsx from "clsx";
 import styles from "./page.module.css";
-import Boton from "../componentes/Boton";
 import Title from "../componentes/Title";
-import { useSocket } from "../hooks/useSocket";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
@@ -21,6 +18,7 @@ export default function salaEspera() {
   const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
   const sala = searchParams.get("sala");
+    const id = searchParams.get("id");
   console.log(`el usuario ${nombre} ingresó a la sala ${sala}`)
 
   useEffect(() => {
@@ -36,7 +34,7 @@ export default function salaEspera() {
 
   useEffect(() => {
     if (segundos == 10) {
-      router.push(`./chat?nombre=${nombre}&sala=${sala}`)
+      router.push(`./chat?nombre=${nombre}&sala=${sala}&id=${id}&admin=${searchParams.get("admin")}`);
       console.log("debería estar pusheando")
     }
   }, [segundos])

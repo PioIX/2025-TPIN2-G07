@@ -26,7 +26,7 @@ export default function Chat() {
   console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
 
   useEffect(() => {
-    jugadores();
+    setUserList(jugadores());
   }, []);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function Chat() {
   function enviarMensaje() {
     if (socket && socket.emit && mensajeACT.trim() !== "") {
       socket.emit("sendMessage", { message: mensajeACT });
-   //   setMensajes((prev) => [...prev, mensajeACT]); // se muestra también localmente
+   // setMensajes((prev) => [...prev, mensajeACT]); // se muestra también localmente
       setMensajeACT(""); // limpia el input
     } else {
       console.warn("⚠️ No se puede enviar mensaje vacío o sin conexión.");

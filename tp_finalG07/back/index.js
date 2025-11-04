@@ -146,3 +146,35 @@ app.post('/buscarUsuario', async function (req, res) {
 	}
 
 })
+
+
+app.post('/buscarSala', async function (req, res) {
+	try {
+		check = await realizarQuery(`SELECT * FROM Rooms WHERE nombreRoom = "${req.body.nombreRoom}"`)
+		if (check.length = 0) {
+			res.send({ mensaje: "La sala no existe" })
+		} else {
+			id = await realizarQuery(`SELECT idRoom FROM Rooms WHERE nombreRoom = '${req.body.nombreRoom}'`)
+			res.send(id)
+		}
+	} catch (error) {
+		res.send({ mensaje: "error", error })
+	}
+
+})
+
+app.post('/crearSala', async function (req, res) {
+	try {
+		let check = await realizarQuery(`SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`)
+		if (check.length > 0) {
+			res.send({ mensaje: "La sala ya existe" })
+		} else {
+			console.log(req.body)
+			await realizarQuery(`INSERT INTO Rooms (nombreRoom, idRoom) VALUES
+            ("${req.body.nombreRoom}", "${req.body.idRoom}")`)
+		}
+	} catch (error) {
+		res.send({ mensaje: "error", error })
+	}
+
+})

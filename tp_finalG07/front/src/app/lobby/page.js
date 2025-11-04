@@ -1,29 +1,35 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import clsx from 'clsx';
 import styles from './page.module.css'
 import Boton from '../componentes/Boton';
 import Title from '../componentes/Title';
 import { useSocket } from '../hooks/useSocket';
 import Input from '../componentes/Input';
 import { useRouter } from 'next/navigation';
-
+import { useSearchParams } from "next/navigation";
+import { buscarSala, crearSala } from '../fetch/fetch';
 
 export default function Lobby() {
     const router = useRouter();
     const [nombre, setNombre] = useState("");
     const [sala, setSala] = useState("");
-      const id = searchParams.get("id");
-    function unirse() {
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id");
+    async function unirse() {
         if (nombre !== "" && sala !== "") {
-            router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&sid=${id}`);
+             const respuesta = await buscarSala({ nombreRoom: nombre, idRoom: sala });
+                  console.log(respuesta);
+           if (respuesta.length > 0) {router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=false`)}
+            else {alert("La sala no existe")};
         }
     }
-    function crear() {
+    async function crear() {
         if (nombre !== "" && sala !== "") {
-            
-            router.push(`./salaEspera?nombre=${nombre}&sala=${sala}`);
+             const respuesta = await crearSala({ nombreRoom: nombre, idRoom: sala });
+                  console.log(respuesta);
+            if (respuesta.length < 0) {router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=true`)}
+            else {alert("La sala ya existe")};
         }
     }
     function nombrarSala(event) {
