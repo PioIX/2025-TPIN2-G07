@@ -18,18 +18,28 @@ export default function Lobby() {
     const id = searchParams.get("id");
     async function unirse() {
         if (nombre !== "" && sala !== "") {
-             const respuesta = await buscarSala({ nombreRoom: nombre, idRoom: sala });
-                  console.log(respuesta);
-           if (respuesta.length > 0) {router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=false`)}
-            else {alert("La sala no existe")};
+            const respuesta = await buscarSala({ nombreRoom: nombre, idRoom: sala });
+            console.log(respuesta);
+            if (respuesta.length > 0) { router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=false`) }
+            else { alert("La sala no existe") };
         }
     }
     async function crear() {
         if (nombre !== "" && sala !== "") {
-             const respuesta = await crearSala({ nombreRoom: nombre, idRoom: sala });
-                  console.log(respuesta);
-            if (respuesta.length < 0) {router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=true`)}
-            else {alert("La sala ya existe")};
+            const respuesta = await buscarSala({ nombreRoom: nombre, idRoom: sala });
+            console.log(respuesta);
+            if (respuesta.crearSala) {
+                let respuestaCrear = await crearSala({ nombreRoom: nombre, idRoom: sala })
+                if (respuestaCrear.avanzar) {
+                    router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=true`)
+                } else {
+
+                    alert("La sala ya existe")
+                }
+            }
+            else { 
+                alert("Llene los inputs")
+            };
         }
     }
     function nombrarSala(event) {

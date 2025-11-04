@@ -150,12 +150,14 @@ app.post('/buscarUsuario', async function (req, res) {
 
 app.post('/buscarSala', async function (req, res) {
 	try {
-		check = await realizarQuery(`SELECT * FROM Rooms WHERE nombreRoom = "${req.body.nombreRoom}"`)
-		if (check.length = 0) {
-			res.send({ mensaje: "La sala no existe" })
+		console.log(req.body)
+		check = await realizarQuery(`SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`)
+		console.log(check)
+		if (check.length == 0) {
+			res.send({ mensaje: "La sala no existe", crearSala: true })
 		} else {
-			id = await realizarQuery(`SELECT idRoom FROM Rooms WHERE nombreRoom = '${req.body.nombreRoom}'`)
-			res.send(id)
+			id = await realizarQuery(`SELECT idRoom FROM Rooms WHERE idRoom = '${req.body.idRoom}'`)
+			res.send({sala: id[0], crearSala: false})
 		}
 	} catch (error) {
 		res.send({ mensaje: "error", error })
@@ -167,11 +169,32 @@ app.post('/crearSala', async function (req, res) {
 	try {
 		let check = await realizarQuery(`SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`)
 		if (check.length > 0) {
-			res.send({ mensaje: "La sala ya existe" })
+			res.send({ mensaje: "La sala ya existía", avanzar: false })
 		} else {
-			console.log(req.body)
+			console.log("!!!!"	,req.body)
 			await realizarQuery(`INSERT INTO Rooms (nombreRoom, idRoom) VALUES
             ("${req.body.nombreRoom}", "${req.body.idRoom}")`)
+			res.send({avanzar: true})
+		}
+	} catch (error) {
+		res.send({ mensaje: "error", error })
+	}
+
+})
+
+
+app.post('/impostor', async function (req, res) {
+	try {
+		let check = await realizarQuery(`SELECT * FROM Usuarios WHERE nombre = "${req.body.nombre}"`)
+		if (check.length > 0) {
+			res.send({ mensaje: "El usuario ya existe" })
+		} else {
+			console.log(req.body)
+			await realizarQuery(`INSERT INTO Usuarios (nombre, contraseña) VALUES
+            ("${req.body.nombre}", "${req.body.contraseña}")`)
+			let resTemp = await realizarQuery(`SELECT idUser FROM Usuarios WHERE nombre = "${req.body.nombre}"`)
+			await realizarQuery(`UPDATE Usuarios SET fotoPerfil = "https://robohash.org/${resTemp[0].idUser}" WHERE idUser = ${resTemp[0].idUser}`)
+			res.send(await realizarQuery(`SELECT idUser FROM Usuarios WHERE nombre = '${req.body.nombre}'`))
 		}
 	} catch (error) {
 		res.send({ mensaje: "error", error })
