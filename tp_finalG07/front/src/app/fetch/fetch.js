@@ -6,7 +6,7 @@ export async function jugadores() {
         if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
         const data = await res.json();
         console.log("🎮 Jugadores obtenidos:", data);
-        setUserList(data.mensaje || []);
+        return data
       } catch (error) {
         console.error("❌ Error al conectar con el servidor:", error);
       }
@@ -24,8 +24,30 @@ export async function jugadores() {
 }
 
 
-  export async function  buscarUsuario(dato){
+  export async function buscarUsuario(dato){
     const response = await fetch(`http://localhost:4000/buscarUsuario`, {
+        method: "POST",
+        headers: {"Content-Type" : "application/json"},
+        body: JSON.stringify(dato)
+    })
+  const data = await response.json();
+  return data;
+}
+
+
+  export async function crearSala(dato){
+    const response = await fetch(`http://localhost:4000/crearSala`, {
+        method: "POST",
+        headers: {"Content-Type" : "application/json"},
+        body: JSON.stringify(dato)
+    })
+  const data = await response.json();
+  return data;
+}
+
+
+  export async function buscarSala(dato){
+    const response = await fetch(`http://localhost:4000/buscarSala`, {
         method: "POST",
         headers: {"Content-Type" : "application/json"},
         body: JSON.stringify(dato)
