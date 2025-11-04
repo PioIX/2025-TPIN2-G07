@@ -105,7 +105,7 @@ app.get('/usuarios', async function (req, res) {
 
 app.get('/jugadores', async function (req, res) {
 	try {
-		const resultado = await realizarQuery(`SELECT * FROM Usuarios where idUser = "${req.body.id}"`);
+		const resultado = await realizarQuery(`SELECT * FROM Usuarios`);
 		res.send({ mensaje: resultado });
 	} catch (error) {
 		console.error("Error al traer jugadores:", error);
