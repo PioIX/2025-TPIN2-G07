@@ -6,7 +6,7 @@ export async function jugadores() {
         if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
         const data = await res.json();
         console.log("🎮 Jugadores obtenidos:", data);
-        return data
+        return data;
       } catch (error) {
         console.error("❌ Error al conectar con el servidor:", error);
       }

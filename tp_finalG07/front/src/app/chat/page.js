@@ -25,9 +25,18 @@ export default function Chat() {
 
   console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
 
-  useEffect(() => {
-    setUserList(jugadores());
-  }, []);
+useEffect(() => {
+  async function listaJugadores() {
+    const data = await jugadores();
+    if (data && Array.isArray(data.mensaje)) {
+      setUserList(data.mensaje)
+      console.log("holaaa");
+    } else {
+      setUserList([]);
+    }
+  }
+  listaJugadores();
+}, []);
 
   useEffect(() => {
     if (!socket) return;
@@ -125,8 +134,8 @@ export default function Chat() {
                 <Usuario
                   key={usuario.idUser}
                   className={styles.player}
-                  text={usuario.nombreUser}
-                  nombre={usuario.nombreUser}
+                  text={usuario.nombre}
+                  nombre={usuario.nombre}
                 />
               ))
             ) : (
