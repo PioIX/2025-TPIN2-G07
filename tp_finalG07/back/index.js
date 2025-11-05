@@ -202,8 +202,26 @@ app.post('/impostor', async function (req, res) {
 
 });
 
-app.post('/agregarUsuario', async function (req, res) {
+app.post('/agregarASala', async function (req, res) {
 	await realizarQuery(`INSERT INTO UsuariosPorSala(idUser, idRoom, esAdmin) VALUES 
 		("${req.body.idUser}", "${req.body.idRoom}", "${req.body.esAdmin}")`)
 		res.send(await realizarQuery(`select idUserPorSala where idUser = ${req.body.idUser} idRoom = ${req.body.idRoom} esAdmin = ${req.body.esAdmin}`))
 	})
+
+app.get('/buscarEnSala', async function (req, res) {
+  check = await realizarQuery(`
+    SELECT * FROM UsuariosPorSala
+    WHERE idUser = ${req.body.idUser} 
+    AND idRoom = ${req.body.idRoom}
+  `);
+
+  if (check.length == 0) {
+    res.send({ mensaje: "No existe relación entre el usuario y la sala" });
+  } else {
+    res.send(await realizarQuery(`
+      SELECT * FROM UsuariosPorSala
+      WHERE idUser = ${req.body.idUser} 
+      AND idRoom = ${req.body.idRoom}
+    `));
+  }
+});
