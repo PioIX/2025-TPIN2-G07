@@ -212,14 +212,15 @@ app.get('/buscarEnSala', async function (req, res) {
   check = await realizarQuery(`
     SELECT * FROM UsuariosPorSala
     WHERE idRoom = ${req.body.idRoom}
-  `);
+	`);
 
   if (check.length == 0) {
     res.send({ mensaje: "No existe relación entre el usuario y la sala" });
   } else {
     res.send(await realizarQuery(`
-      SELECT * FROM UsuariosPorSala
+      SELECT idUser FROM UsuariosPorSala
       WHERE idRoom = ${req.body.idRoom}
     `));
+
   }
 });

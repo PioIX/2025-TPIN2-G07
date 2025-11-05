@@ -43,8 +43,9 @@ export default function salaEspera() {
   useEffect(() => {
     if (segundos == 10) {
       if(admin){
-        buscarEnSala(sala)
-      }
+        jugadores = buscarEnSala(sala)
+        const impostorinador = jugadores[Math.floor(Math.random() * (jugadores.length )) + min];
+      //acá hacer el update}
       router.push(`./chat?nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}`);
       console.log("debería estar pusheando")
     }
