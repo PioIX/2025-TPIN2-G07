@@ -157,7 +157,7 @@ app.post('/buscarSala', async function (req, res) {
 			res.send({ mensaje: "La sala no existe", crearSala: true })
 		} else {
 			id = await realizarQuery(`SELECT idRoom FROM Rooms WHERE idRoom = '${req.body.idRoom}'`)
-			res.send({sala: id[0], crearSala: false})
+			res.send({ sala: id[0], crearSala: false })
 		}
 	} catch (error) {
 		res.send({ mensaje: "error", error })
@@ -171,10 +171,10 @@ app.post('/crearSala', async function (req, res) {
 		if (check.length > 0) {
 			res.send({ mensaje: "La sala ya existía", avanzar: false })
 		} else {
-			console.log("!!!!"	,req.body)
+			console.log("!!!!", req.body)
 			await realizarQuery(`INSERT INTO Rooms (nombreRoom, idRoom) VALUES
             ("${req.body.nombreRoom}", "${req.body.idRoom}")`)
-			res.send({avanzar: true})
+			res.send({ avanzar: true })
 		}
 	} catch (error) {
 		res.send({ mensaje: "error", error })
@@ -200,4 +200,28 @@ app.post('/impostor', async function (req, res) {
 		res.send({ mensaje: "error", error })
 	}
 
-})
+});
+
+app.post('/agregarASala', async function (req, res) {
+	await realizarQuery(`INSERT INTO UsuariosPorSala(idUser, idRoom, esAdmin) VALUES 
+		("${req.body.idUser}", "${req.body.idRoom}", "${req.body.esAdmin}")`)
+		res.send(await realizarQuery(`select idUserPorSala where idUser = ${req.body.idUser} idRoom = ${req.body.idRoom} esAdmin = ${req.body.esAdmin}`))
+	})
+
+app.get('/buscarEnSala', async function (req, res) {
+  check = await realizarQuery(`
+    SELECT * FROM UsuariosPorSala
+    WHERE idUser = ${req.body.idUser} 
+    AND idRoom = ${req.body.idRoom}
+  `);
+
+  if (check.length == 0) {
+    res.send({ mensaje: "No existe relación entre el usuario y la sala" });
+  } else {
+    res.send(await realizarQuery(`
+      SELECT * FROM UsuariosPorSala
+      WHERE idUser = ${req.body.idUser} 
+      AND idRoom = ${req.body.idRoom}
+    `));
+  }
+});
