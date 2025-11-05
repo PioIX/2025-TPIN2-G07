@@ -211,17 +211,16 @@ app.post('/agregarASala', async function (req, res) {
 app.get('/buscarEnSala', async function (req, res) {
   check = await realizarQuery(`
     SELECT * FROM UsuariosPorSala
-    WHERE idUser = ${req.body.idUser} 
-    AND idRoom = ${req.body.idRoom}
-  `);
+    WHERE idRoom = ${req.body.idRoom}
+	`);
 
   if (check.length == 0) {
     res.send({ mensaje: "No existe relación entre el usuario y la sala" });
   } else {
     res.send(await realizarQuery(`
-      SELECT * FROM UsuariosPorSala
-      WHERE idUser = ${req.body.idUser} 
-      AND idRoom = ${req.body.idRoom}
+      SELECT idUser FROM UsuariosPorSala
+      WHERE idRoom = ${req.body.idRoom}
     `));
+
   }
 });
