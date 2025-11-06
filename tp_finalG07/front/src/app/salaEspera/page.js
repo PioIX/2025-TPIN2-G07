@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 import Title from "../componentes/Title";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { buscarSala } from "../fetch/fetch";
+import { agregarASala, buscarEnSala } from "../fetch/fetch";
 
 
 let siempre = true;
@@ -21,12 +21,12 @@ export default function salaEspera() {
   const id = searchParams.get("id");
   const admin = searchParams.get("admin")
 
-  console.log(`el usuario ${nombre} ingresó a la sala ${sala}`)
+ 
 
   useEffect(() => {
-
+     console.log(`el usuario ${nombre} ingresó a la sala ${sala}`)
    async function armadorDeSalas() {
-    await agregarASala({idUser: id, IdRoom: sala, esAdmin: admin});
+    await agregarASala({idUser: id, idRoom: sala, esAdmin: admin});
     }
     armadorDeSalas()
     const intervalo = setInterval(() => {
@@ -43,9 +43,10 @@ export default function salaEspera() {
   useEffect(() => {
     if (segundos == 10) {
       if(admin){
-        jugadores = buscarEnSala(sala)
-        const impostorinador = jugadores[Math.floor(Math.random() * (jugadores.length )) + min];
-      //acá hacer el update}
+       let jugadores = buscarEnSala(sala)
+        const impostorinador = jugadores[Math.floor(Math.random() * (jugadores.length ))]
+        ;
+      }
       router.push(`./chat?nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}`);
       console.log("debería estar pusheando")
     }
