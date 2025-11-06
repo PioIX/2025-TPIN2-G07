@@ -244,5 +244,5 @@ app.put("/actualizarImpostor", async function (req, res) {
 	} else {
 		res.send({ mensaje: "Body incompleto, no se modificó el usuario" })
 	}
-})
+});
 

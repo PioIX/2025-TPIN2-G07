@@ -47,11 +47,10 @@ export default function salaEspera() {
           let jugadores = await buscarEnSala({ idRoom: sala })
           const impostorinador = jugadores[Math.floor(Math.random() * (jugadores.length))]
           
-        buscaSalas()
-        definirImpostor({idUser: impostorinador}) 
-          ;
+        
+        definirImpostor({idUser: impostorinador});
       }
-      
+      buscaSalas()
     }
     router.push(`./chat?nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}`);
       console.log("debería estar pusheando")
