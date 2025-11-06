@@ -1,7 +1,9 @@
-export async function jugadores() {
+export async function jugadores(dato) {
   try {
     const res = await fetch("http://localhost:4000/jugadores", {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dato),
     });
     if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
     const data = await res.json();
@@ -81,6 +83,17 @@ export async function obtenerDeSala(dato) {
 export async function buscarEnSala(dato) {
   const response = await fetch(`http://localhost:4000/buscarEnSala`, {
     headers: { "Content-Type": "application/json" },
+  });
+  const data = await response.json();
+  return data;
+}
+
+
+export async function definirImpostor(dato) {
+  const response = await fetch(`http://localhost:4000/actualizarImpostor`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dato),
   });
   const data = await response.json();
   return data;

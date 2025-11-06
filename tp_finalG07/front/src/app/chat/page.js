@@ -25,13 +25,14 @@ export default function Chat() {
 
   console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
 
-  async function listaJugadores() {
+  
+
+  useEffect(() => {
+    async function listaJugadores() {
     const data = await jugadores({ idRoom: sala });
     setUserList(data);
     console.log("holaaa");
   }
-
-  useEffect(() => {
     listaJugadores();
   }, []);
 
@@ -104,8 +105,6 @@ export default function Chat() {
               />
             ))}
           </div>
-
-          {/* INPUT Y BOTÓN DE ENVÍO */}
           <div className={styles.inputRow}>
             <Input
               tipo="chat"
