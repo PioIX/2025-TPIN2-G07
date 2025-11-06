@@ -58,6 +58,7 @@ export async function jugadores() {
 }
 
 export async function agregarASala(dato) {
+  console.log("DATO ES",dato)
   const response = await fetch(`http://localhost:4000/agregarASala`, {
     method: "POST",
     headers: { "Content-Type": "application/json" }, 
@@ -72,6 +73,14 @@ export async function obtenerDeSala(dato) {
   const response = await fetch(`http://localhost:4000/salasxusuarios`, {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dato), 
+  });
+  const data = await response.json(); 
+  return data;
+}
+
+export async function buscarEnSala(dato) {
+  const response = await fetch(`http://localhost:4000/buscarEnSala`, {
+    headers: { "Content-Type": "application/json" },
   });
   const data = await response.json(); 
   return data;

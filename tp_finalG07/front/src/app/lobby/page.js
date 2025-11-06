@@ -38,7 +38,7 @@ export default function Lobby() {
                 }
             }
             else { 
-                alert("Llene los inputs")
+                alert("ya existe una sala con ese numero, o falta llenar un input")
             };
         }
     }
