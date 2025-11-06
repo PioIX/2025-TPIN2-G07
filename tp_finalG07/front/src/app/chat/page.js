@@ -61,12 +61,10 @@ export default function Chat() {
     }
   }, [socket, sala]);
 
-  // 🔹 Envía mensaje
   function enviarMensaje() {
     if (socket && socket.emit && mensajeACT.trim() !== "") {
-      socket.emit("sendMessage", { message: mensajeACT });
-      // setMensajes((prev) => [...prev, mensajeACT]); // se muestra también localmente
-      setMensajeACT(""); // limpia el input
+      socket.emit("sendMessage", { message: mensajeACT },{ room: sala});
+      setMensajeACT(""); 
     } else {
       console.warn("⚠️ No se puede enviar mensaje vacío o sin conexión.");
     }

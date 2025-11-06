@@ -20,7 +20,7 @@ export default function Lobby() {
         if (nombre !== "" && sala !== "") {
             const respuesta = await buscarSala({ nombreRoom: nombre, idRoom: sala });
             console.log(respuesta);
-            if (respuesta.length > 0) { router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=false`) }
+            if (respuesta.length > 0) { router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=FALSE`) }
             else { alert("La sala no existe") };
         }
     }
@@ -31,7 +31,7 @@ export default function Lobby() {
             if (respuesta.crearSala) {
                 let respuestaCrear = await crearSala({ nombreRoom: nombre, idRoom: sala })
                 if (respuestaCrear.avanzar) {
-                    router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=true`)
+                    router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=TRUE`)
                 } else {
 
                     alert("La sala ya existe")
