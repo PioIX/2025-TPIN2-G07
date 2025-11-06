@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 import Title from "../componentes/Title";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { agregarASala, buscarEnSala, jugadores } from "../fetch/fetch";
+import { agregarASala, buscarEnSala, definirImpostor } from "../fetch/fetch";
 
 
 let siempre = true;
@@ -51,9 +51,10 @@ export default function salaEspera() {
         definirImpostor({idUser: impostorinador}) 
           ;
       }
-      router.push(`./chat?nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}`);
-      console.log("debería estar pusheando")
+      
     }
+    router.push(`./chat?nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}`);
+      console.log("debería estar pusheando")
   }}, [segundos])
 
 
