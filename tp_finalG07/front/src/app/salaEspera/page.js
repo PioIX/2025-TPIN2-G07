@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 import Title from "../componentes/Title";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { agregarASala, buscarEnSala } from "../fetch/fetch";
+import { agregarASala, buscarEnSala, jugadores } from "../fetch/fetch";
 
 
 let siempre = true;
@@ -21,12 +21,12 @@ export default function salaEspera() {
   const id = searchParams.get("id");
   const admin = searchParams.get("admin")
 
- 
+
 
   useEffect(() => {
-     console.log(`el usuario ${nombre} ingresó a la sala ${sala}`)
-   async function armadorDeSalas() {
-    await agregarASala({idUser: id, idRoom: sala, esAdmin: admin});
+    console.log(`el usuario ${nombre} ingresó a la sala ${sala}`)
+    async function armadorDeSalas() {
+      await agregarASala({ idUser: id, idRoom: sala, esAdmin: admin });
     }
     armadorDeSalas()
     const intervalo = setInterval(() => {
@@ -37,20 +37,24 @@ export default function salaEspera() {
     return () => {
       clearInterval(intervalo);
     };
-    
+
   }, []);
 
   useEffect(() => {
     if (segundos == 10) {
-      if(admin){
-       let jugadores = buscarEnSala({idRoom: sala})
-        const impostorinador = jugadores[Math.floor(Math.random() * (jugadores.length ))]
-        ;
+      if (admin) {
+        async function buscaSalas() {
+          let jugadores = await buscarEnSala({ idRoom: sala })
+          const impostorinador = jugadores[Math.floor(Math.random() * (jugadores.length))]
+          
+        buscaSalas()
+        definirImpostor({idUser: impostorinador}) 
+          ;
       }
       router.push(`./chat?nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}`);
       console.log("debería estar pusheando")
     }
-  }, [segundos])
+  }}, [segundos])
 
 
   return (

@@ -103,7 +103,7 @@ app.get('/usuarios', async function (req, res) {
 	}
 });
 
-app.get('/jugadores', async function (req, res) {
+app.post('/jugadores', async function (req, res) {
 	try {
 		const idJugadores = await realizarQuery(`SELECT idUser FROM UsuariosPorSala WHERE idRoom = '${req.body.idRoom}'`);
 		const resultado = await realizarQuery(`SELECT * FROM Usuarios WHERE idUser = '${idJugadores}'`)
@@ -222,7 +222,7 @@ app.get('/buscarEnSala', async function (req, res) {
 	console.log(req.body)
 	check = await realizarQuery(`
     SELECT * FROM UsuariosPorSala
-    WHERE idRoom = ${req.body.idRoom}
+    WHERE idRoom = '${req.body.idRoom}'
 	`);
 	console.log(check)
 	if (check.length == 0) {
@@ -238,10 +238,11 @@ app.get('/buscarEnSala', async function (req, res) {
 
 app.put("/actualizarImpostor", async function (req, res) {
 	if (req.body.idUser != undefined) {
-		await realizarQuery(`UPDATE UsuariosPorSala SET impostor = true WHERE idUser = ${req.body.idUser}`)
+		await realizarQuery(`UPDATE UsuariosPorSala SET impostor = true where idUser= '${req.body.idUser}'`)
 
 		res.send({ mensaje: "Se modifico el usuario" })
 	} else {
 		res.send({ mensaje: "Body incompleto, no se modificó el usuario" })
 	}
 })
+
