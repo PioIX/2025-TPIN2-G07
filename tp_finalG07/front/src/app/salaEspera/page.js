@@ -43,7 +43,7 @@ export default function salaEspera() {
   useEffect(() => {
     if (segundos == 10) {
       if(admin){
-       let jugadores = buscarEnSala(sala)
+       let jugadores = buscarEnSala({idRoom: sala})
         const impostorinador = jugadores[Math.floor(Math.random() * (jugadores.length ))]
         ;
       }
