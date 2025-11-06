@@ -105,12 +105,14 @@ app.get('/usuarios', async function (req, res) {
 
 app.get('/jugadores', async function (req, res) {
 	try {
-		const resultado = await realizarQuery(`SELECT * FROM Usuarios`);
+		const idJugadores = await realizarQuery(`SELECT idUser FROM UsuariosPorSala WHERE idRoom = '${req.body.idRoom}'`);
+		const resultado = await realizarQuery(`SELECT * FROM Usuarios WHERE idUser = '${idJugadores}'`)
 		res.send({ mensaje: resultado });
 	} catch (error) {
 		console.error("Error al traer jugadores:", error);
 		res.send({ mensaje: "error", error });
 	}
+
 });
 
 app.post('/crearUsuario', async function (req, res) {
@@ -205,39 +207,39 @@ app.post('/impostor', async function (req, res) {
 app.post('/agregarASala', async function (req, res) {
 	console.log(req.body)
 	let check = await realizarQuery(`SELECT * FROM UsuariosPorSala WHERE idRoom = "${req.body.idRoom}" AND idUser = "${req.body.idUser}" `)
-		if (check.length > 0) {
-			res.send({ mensaje: "El usuario ya está cargado" })
-		}
-	else{
-	await realizarQuery(`INSERT INTO UsuariosPorSala(idUser, idRoom, esAdmin) VALUES 
+	if (check.length > 0) {
+		res.send({ mensaje: "El usuario ya está cargado" })
+	}
+	else {
+		await realizarQuery(`INSERT INTO UsuariosPorSala(idUser, idRoom, esAdmin) VALUES 
 		("${req.body.idUser}", "${req.body.idRoom}", ${req.body.esAdmin})`)
 		res.send(await realizarQuery(`select idUserPorSala FROM UsuariosPorSala where idUser = ${req.body.idUser} AND idRoom = ${req.body.idRoom} and esAdmin = ${req.body.esAdmin}`))
-	}})
-	//a revisar
+	}
+})
+//a revisar
 
 app.get('/buscarEnSala', async function (req, res) {
-  check = await realizarQuery(`
+	check = await realizarQuery(`
     SELECT * FROM UsuariosPorSala
     WHERE idRoom = ${req.body.idRoom}
-	`)
-	;
-  if (check.length == 0) {
-    res.send({ mensaje: "No existe relación entre el usuario y la sala" });
-  } else {
-    res.send(await realizarQuery(`
+	`);
+	if (check.length == 0) {
+		res.send({ mensaje: "No existe relación entre el usuario y la sala" });
+	} else {
+		res.send(await realizarQuery(`
       SELECT idUser FROM UsuariosPorSala
       WHERE idRoom = ${req.body.idRoom}
     `));
 
-  }
+	}
 });
 
-app.put("/actualizarImpostor", async function (req,res) {
+app.put("/actualizarImpostor", async function (req, res) {
 	if (req.body.idUser != undefined) {
 		await realizarQuery(`UPDATE UsuariosPorSala SET impostor = true WHERE idUser = ${req.body.idUser}`)
 
-		res.send({mensaje: "Se modifico el usuario"})
+		res.send({ mensaje: "Se modifico el usuario" })
 	} else {
-		res.send({mensaje: "Body incompleto, no se modificó el usuario"})
+		res.send({ mensaje: "Body incompleto, no se modificó el usuario" })
 	}
 })

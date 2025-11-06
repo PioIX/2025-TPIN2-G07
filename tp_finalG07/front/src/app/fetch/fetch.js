@@ -1,80 +1,80 @@
 export async function jugadores() {
-      try {
-        const res = await fetch("http://localhost:4000/jugadores", {
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
-        const data = await res.json();
-        console.log("🎮 Jugadores obtenidos:", data);
-        return data;
-      } catch (error) {
-        console.error("❌ Error al conectar con el servidor:", error);
-      }
-    }
+  try {
+    const res = await fetch("http://localhost:4000/jugadores", {
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+    const data = await res.json();
+    console.log("🎮 Jugadores obtenidos:", data);
+    return data;
+  } catch (error) {
+    console.error("❌ Error al conectar con el servidor:", error);
+  }
+}
 
 
-  export async function crearUsuario(dato){
-    const response = await fetch(`http://localhost:4000/crearUsuario`, {
-        method: "POST",
-        headers: {"Content-Type" : "application/json"},
-        body: JSON.stringify(dato)
-    })
+export async function crearUsuario(dato) {
+  const response = await fetch(`http://localhost:4000/crearUsuario`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dato)
+  })
   const data = await response.json();
   return data;
 }
 
 
-  export async function buscarUsuario(dato){
-    const response = await fetch(`http://localhost:4000/buscarUsuario`, {
-        method: "POST",
-        headers: {"Content-Type" : "application/json"},
-        body: JSON.stringify(dato)
-    })
+export async function buscarUsuario(dato) {
+  const response = await fetch(`http://localhost:4000/buscarUsuario`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dato)
+  })
   const data = await response.json();
   return data;
 }
 
 
-  export async function crearSala(dato){
-    console.log(dato)
-    const response = await fetch(`http://localhost:4000/crearSala`, {
-        method: "POST",
-        headers: {"Content-Type" : "application/json"},
-        body: JSON.stringify(dato)
-    })
+export async function crearSala(dato) {
+  console.log(dato)
+  const response = await fetch(`http://localhost:4000/crearSala`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dato)
+  })
   const data = await response.json();
   return data;
 }
 
 
-  export async function buscarSala(dato){
-    const response = await fetch(`http://localhost:4000/buscarSala`, {
-        method: "POST",
-        headers: {"Content-Type" : "application/json"},
-        body: JSON.stringify(dato)
-    })
+export async function buscarSala(dato) {
+  const response = await fetch(`http://localhost:4000/buscarSala`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dato)
+  })
   const data = await response.json();
   return data;
 }
 
 export async function agregarASala(dato) {
-  console.log("DATO ES",dato)
+  console.log("DATO ES", dato)
   const response = await fetch(`http://localhost:4000/agregarASala`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" }, 
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dato),
   });
-  const data = await response.json(); 
-  return data; 
+  const data = await response.json();
+  return data;
 }
 
 
 export async function obtenerDeSala(dato) {
   const response = await fetch(`http://localhost:4000/salasxusuarios`, {
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(dato), 
+    body: JSON.stringify(dato),
   });
-  const data = await response.json(); 
+  const data = await response.json();
   return data;
 }
 
@@ -82,6 +82,6 @@ export async function buscarEnSala(dato) {
   const response = await fetch(`http://localhost:4000/buscarEnSala`, {
     headers: { "Content-Type": "application/json" },
   });
-  const data = await response.json(); 
+  const data = await response.json();
   return data;
 }
