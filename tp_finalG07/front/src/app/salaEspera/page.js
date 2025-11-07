@@ -42,25 +42,30 @@ export default function salaEspera() {
   }, []);
 
   useEffect(() => {
-    if(segundos == 7){
-      if (admin) {
+  if (segundos === 7) {
+    if (admin) {
+      async function buscaSalas() {
+        const lista = await buscarEnSala({ idRoom: sala });
+        setJugadores(lista);
 
-      
-       async function buscaSalas() {
+        if (lista.length > 0) {
+          const randomIndex = Math.floor(Math.random() * lista.length);
+          const impostorinador = lista[randomIndex];
 
-          setJugadores(await buscarEnSala({ idRoom: sala }))
-          const impostorinador = jugadores[0]
-        definirImpostor({idUser: impostorinador});
+          await definirImpostor({
+            idUser: impostorinador.idUser,
+            idRoom: sala
+          });
+        }
       }
-      buscaSalas()
+      buscaSalas();
     }
-    }
-    if (segundos ==9){console.log("lista de jugadores", jugadores)}
-    if (segundos == 10) {
-      
-    router.push(`./chat?nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}`);
-  }}, [segundos])
+  }
 
+  if (segundos === 10) {
+    router.push(`./chat?nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}`);
+  }
+}, [segundos]);
 
   return (
     <>

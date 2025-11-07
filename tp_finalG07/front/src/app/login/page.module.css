@@ -15,15 +15,15 @@
 }
 
 
-/* ====== CONTENEDOR ROJO: ocupa toda la pantalla ====== */
+
 .container {
   width: 100vw;
-  height: 100vh;              /* ocupa toda la pantalla */
+  height: 100vh;             
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #3a0000;  /* rojo sólido principal (igual que tu lobby) */
+  background-color: #3a0000;  
   border: 3px solid #5c0000;
   box-shadow: 0 30px 80px rgba(0,0,0,0.7), inset 0 0 60px rgba(255,0,0,0.04);
   padding: 2.5rem;
@@ -31,7 +31,6 @@
 }
 
 
-/* Contenido central (para que los inputs no ocupen toda la pantalla) */
 .containerInner {
   width: 90%;
   max-width: 520px;
@@ -55,14 +54,14 @@
 }
 
 
-/* ====== INPUTS: estilo como en Lobby (siempre blanco, redondeado, con sombra) ====== */
+/* INPUTS: */
 .inputLogin {
   width: 100%;
   padding: 16px 20px;
   font-size: 1.05rem;
   border-radius: 12px;
-  border: 2px solid #5c0000;     /* borde rojizo sutil */
-  background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%); /* blanco sólido */
+  border: 2px solid #5c0000;   
+  background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%); 
   color: #3a0000;
   box-shadow:
     0 8px 18px rgba(0,0,0,0.6),
@@ -72,21 +71,20 @@
 }
 
 
-/* placeholder sutil */
+/* placeholder */
 .inputLogin::placeholder {
   color: #9b6b6b;
   opacity: 0.9;
 }
 
 
-/* foco mantiene blanco y resalta sin volverse rojo */
 .inputLogin:focus {
   transform: translateY(-2px);
-  border-color: #ff4d4d; /* leve borde rojo al foco */
+  border-color: #ff4d4d; 
   box-shadow:
     0 12px 30px rgba(0,0,0,0.7),
     0 0 14px rgba(255,77,77,0.12);
-  background: #ffffff; /* siempre blanco */
+  background: #ffffff; 
 }
 
 
@@ -107,13 +105,13 @@
 }
 
 
-/* ====== BOTÓN (estilo lobby) ====== */
+/*BOTÓN  */
 .butonLogin {
   width: 100%;
   max-width: 520px;
   padding: 14px 22px;
   margin-top: 6px;
-  background: #ffffff; /* botón blanco */
+  background: #ffffff; 
   color: #3a0000;
   border: 2px solid #ffffff;
   border-radius: 12px;
@@ -126,7 +124,7 @@
 }
 
 
-/* hover: se pone rojo y texto blanco */
+/* hover */
 .butonLogin:hover {
   background: #ff0000;
   color: #ffffff;
@@ -141,7 +139,7 @@
 }
 
 
-/* mensaje de error (opcional) */
+/* mensaje de error  */
 .errorMsg {
   color: #ffdddd;
   background: rgba(0,0,0,0.15);
