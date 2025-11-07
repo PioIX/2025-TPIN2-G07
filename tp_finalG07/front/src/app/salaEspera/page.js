@@ -14,6 +14,7 @@ export default function salaEspera() {
 
   const [segundos, setSegundos] = useState(0);
   const [idIntervalo, setIdIntervalo] = useState(null);
+  const [jugadores, setJugadores] = useState([]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
@@ -43,9 +44,10 @@ export default function salaEspera() {
   useEffect(() => {
     if (segundos == 10) {
       if (admin) {
+
         async function buscaSalas() {
-          let jugadores = await buscarEnSala({ idRoom: sala })
-          const impostorinador = jugadores[Math.floor(Math.random() * (jugadores.length))]
+          setJugadores(await buscarEnSala({ idRoom: sala }))
+          const impostorinador = jugadores[Math.floor(Math.random() * (jugadores.length))-1]
           
         
         definirImpostor({idUser: impostorinador});
