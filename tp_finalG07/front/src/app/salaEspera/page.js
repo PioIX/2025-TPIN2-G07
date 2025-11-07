@@ -42,11 +42,14 @@ export default function salaEspera() {
   }, []);
 
   useEffect(() => {
-    if (segundos == 10) {
+    if(segundos == 7){
       if (admin) {
 
-        async function buscaSalas() {
+      
+       async function buscaSalas() {
+
           setJugadores(await buscarEnSala({ idRoom: sala }))
+          
           const impostorinador = jugadores[Math.floor(Math.random() * (jugadores.length))-1]
           
         
@@ -54,6 +57,10 @@ export default function salaEspera() {
       }
       buscaSalas()
     }
+    }
+    if (segundos ==9){console.log("lista de jugadores", jugadores)}
+    if (segundos == 10) {
+      
     router.push(`./chat?nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}`);
       console.log("debería estar pusheando")
   }}, [segundos])

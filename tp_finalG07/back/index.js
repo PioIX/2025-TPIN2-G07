@@ -206,7 +206,7 @@ app.post('/impostor', async function (req, res) {
 
 app.post('/agregarASala', async function (req, res) {
 	console.log(req.body)
-	let check = await realizarQuery(`SELECT * FROM UsuariosPorSala WHERE idRoom = "${req.body.idRoom}" AND idUser = "${req.body.idUser}" `)
+	let check = await realizarQuery(`SELECT * FROM UsuariosPorSala WHERE idRoom = ${req.body.idRoom} AND idUser = ${req.body.idUser} `)
 	if (check.length > 0) {
 		res.send({ mensaje: "El usuario ya está cargado" })
 	}
@@ -222,7 +222,7 @@ app.get('/buscarEnSala', async function (req, res) {
 	console.log(req.body)
 	check = await realizarQuery(`
     SELECT * FROM UsuariosPorSala
-    WHERE idRoom = '${req.body.idRoom}'
+    WHERE idRoom = "${req.body.idRoom}"
 	`);
 	console.log(check)
 	if (check.length == 0) {
