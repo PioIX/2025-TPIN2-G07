@@ -1,6 +1,4 @@
 "use client";
-
-
 import Boton from '../componentes/Boton';
 import Input from "../componentes/Input";
 import { useEffect, useState } from "react";

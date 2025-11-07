@@ -104,16 +104,31 @@ app.get('/usuarios', async function (req, res) {
 });
 
 app.post('/jugadores', async function (req, res) {
-	try {
-		const idJugadores = await realizarQuery(`SELECT idUser FROM UsuariosPorSala WHERE idRoom = '${req.body.idRoom}'`);
-		const resultado = await realizarQuery(`SELECT * FROM Usuarios WHERE idUser = '${idJugadores}'`)
-		res.send({ mensaje: resultado });
-	} catch (error) {
-		console.error("Error al traer jugadores:", error);
-		res.send({ mensaje: "error", error });
-	}
+  try {
+    // Traer SOLO los id de esa sala
+    const idJugadores = await realizarQuery(`
+      SELECT idUser FROM UsuariosPorSala WHERE idRoom = '${req.body.idRoom}'`);
+    if (idJugadores.length === 0) {
+      return res.send({ mensaje: [] });
+    }
 
+    // Convertir la lista en un formato usable (id1, id2, id3)
+    const listaIds = idJugadores.map(u => u.idUser).join(",");
+
+    // Paso 3: Traer los usuarios correspondientes
+    const jugadores = await realizarQuery(`
+      SELECT idUser, nombre, fotoPerfil 
+      FROM Usuarios 
+      WHERE idUser IN (${listaIds})
+    `);
+
+    res.send({ mensaje: jugadores });
+  } catch (error) {
+    console.error("Error en /jugadores:", error);
+    res.send({ mensaje: "error", error });
+  }
 });
+
 
 app.post('/crearUsuario', async function (req, res) {
 	try {
@@ -227,7 +242,7 @@ res.send(respuesta)});
 
 
 app.put("/actualizarImpostor", async function (req, res) {
-		await realizarQuery(`UPDATE UsuariosPorSala SET impostor = true where idUser= '${req.body.idUser}'`)
+		await realizarQuery(`UPDATE UsuariosPorSala SET impostor = true where idUser= '${req.body.idUser}' AND idRoom = '${req.body.idRoom}'`)
 
 		res.send({ mensaje: "Se modifico el usuario" })
 });

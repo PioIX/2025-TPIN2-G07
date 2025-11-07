@@ -1,10 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import styles from './page.module.css'
 import Boton from '../componentes/Boton';
 import Title from '../componentes/Title';
-import { useSocket } from '../hooks/useSocket';
 import Input from '../componentes/Input';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from "next/navigation";

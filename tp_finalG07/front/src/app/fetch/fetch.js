@@ -1,16 +1,19 @@
 export async function jugadores(dato) {
   try {
+    console.log("👉 Enviando:", dato);
+    console.log("🌐 Contactando backend en: http://localhost:4000/jugadores");
     const res = await fetch("http://localhost:4000/jugadores", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(dato),
+      body: JSON.stringify(dato),
     });
-    if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+
     const data = await res.json();
-    console.log("🎮 Jugadores obtenidos:", data);
-    return data;
+    return Array.isArray(data.mensaje) ? data.mensaje : [];
+
   } catch (error) {
-    console.error("❌ Error al conectar con el servidor:", error);
+    console.error("Error jugadores:", error);
+    return [];
   }
 }
 
