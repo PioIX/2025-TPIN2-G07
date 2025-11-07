@@ -219,35 +219,16 @@ app.post('/agregarASala', async function (req, res) {
 //a revisar
 
 app.post('/buscarEnSala', async function (req, res) {
-	console.log("muestra req.body: ",req.body)
-	check = await realizarQuery(`
-    SELECT * FROM UsuariosPorSala
-    WHERE idRoom = "${req.body.idRoom}"
-	`);
-	console.log("idRoom:", req.body.idRoom )
-	console.log("Muestra check: ", check)
-	if (check.length === 0) {
-		res.send({ mensaje: "No existe relación entre el usuario y la sala" });
-		console.log("idRoom:", req.body.idRoom)
-		console.log("segundo check:", check)
-	} else {
-		res.send(await realizarQuery(`
+	respuesta = await realizarQuery(`
       SELECT idUser FROM UsuariosPorSala
-      WHERE idRoom = "${req.body.idRoom}"
-    `))
-	console.log("req.body.idRoom del FINAL: ", req.body.idRoom)
-	;
+      WHERE idRoom = "${req.body.idRoom}"`)
+res.send(respuesta)});
 
-	}
-});
+
 
 app.put("/actualizarImpostor", async function (req, res) {
-	if (req.body.idUser != undefined) {
 		await realizarQuery(`UPDATE UsuariosPorSala SET impostor = true where idUser= '${req.body.idUser}'`)
 
 		res.send({ mensaje: "Se modifico el usuario" })
-	} else {
-		res.send({ mensaje: "Body incompleto, no se modificó el usuario" })
-	}
 });
 
