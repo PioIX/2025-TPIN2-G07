@@ -219,22 +219,24 @@ app.post('/agregarASala', async function (req, res) {
 //a revisar
 
 app.post('/buscarEnSala', async function (req, res) {
-	console.log(req.body)
+	console.log("muestra req.body: ",req.body)
 	check = await realizarQuery(`
     SELECT * FROM UsuariosPorSala
     WHERE idRoom = "${req.body.idRoom}"
 	`);
 	console.log("idRoom:", req.body.idRoom )
-	console.log(check)
-	if (check.length == 0) {
+	console.log("Muestra check: ", check)
+	if (check.length === 0) {
 		res.send({ mensaje: "No existe relación entre el usuario y la sala" });
-		console.log("idRoom:", req.body.idRoom )
-		console.log(check)
+		console.log("idRoom:", req.body.idRoom)
+		console.log("segundo check:", check)
 	} else {
 		res.send(await realizarQuery(`
       SELECT idUser FROM UsuariosPorSala
-      WHERE idRoom = "${req.body.idRoom}
-    `));
+      WHERE idRoom = "${req.body.idRoom}"
+    `))
+	console.log("req.body.idRoom del FINAL: ", req.body.idRoom)
+	;
 
 	}
 });
