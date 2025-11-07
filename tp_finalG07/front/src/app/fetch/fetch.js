@@ -83,6 +83,7 @@ export async function obtenerDeSala(dato) {
 export async function buscarEnSala(dato) {
   const response = await fetch(`http://localhost:4000/buscarEnSala`, {
     headers: { "Content-Type": "application/json" },
+    
   });
   const data = await response.json();
   return data;
