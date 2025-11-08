@@ -1,5 +1,7 @@
 "use client";
-
+//Hay que corregir que no se pueden unir usu el mismo error de antes si te unis 
+// te dice q no existe la sala y si creas que ya existe (eso esta bien) lo marca en buscarSala
+// fijarse nombre de usu que lo pone comoo el nombre de la sala, deberia estae en el back
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import Usuario from "../componentes/Usuario";
@@ -15,129 +17,121 @@ let propietario = true;
 let impostor = true;
 
 export default function Chat() {
-  const { socket, isconnected } = useSocket();
+  const { socket } = useSocket();
   const [mensajeACT, setMensajeACT] = useState("");
   const [mensajes, setMensajes] = useState([]);
   const [userList, setUserList] = useState([]);
+
   const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
   const sala = searchParams.get("sala");
 
   console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
 
-  
-
+  // Carga de jugadores
   useEffect(() => {
     async function listaJugadores() {
-    const data = await jugadores({ idRoom: sala });
-    setUserList(data);
-    console.log("holaaa");
-  }
+      const data = await jugadores({ idRoom: sala });
+      setUserList(data);
+    }
     listaJugadores();
-  }, []);
+  }, [sala]);
 
+  // Recibir mensajes
   useEffect(() => {
     if (!socket) return;
 
     socket.on("newMessage", (data) => {
-      console.log(
-        `💬 Nuevo mensaje en sala ${data.room}: ${data.message.message}`
-      );
-      setMensajes((prev) => [...prev, data.message.message]);
+      setMensajes((prev) => [
+        ...prev,
+        { nombre: data.nombre, texto: data.message }
+      ]);
     });
 
-    // Limpieza al desmontar
     return () => socket.off("newMessage");
   }, [socket]);
 
-  // 🔹 Conexión del usuario a la sala
+  // Unión a la sala
   useEffect(() => {
     if (!socket) return;
-    if (socket && socket.emit) {
-      socket.emit("joinRoom", { room: sala });
-      console.log("✅ Usuario unido a la sala:", sala);
-    } else {
-      console.warn("⚠️ Socket no disponible al intentar joinRoom");
-    }
+    socket.emit("joinRoom", { room: sala });
   }, [socket, sala]);
 
   function enviarMensaje() {
-    if (socket && socket.emit && mensajeACT.trim() !== "") {
-      socket.emit("sendMessage", { message: mensajeACT },{ room: sala});
-      setMensajeACT(""); 
-    } else {
-      console.warn("⚠️ No se puede enviar mensaje vacío o sin conexión.");
-    }
-  }
-  function manejarCambio(event) {
-    setMensajeACT(event.target.value);
+    if (!socket || mensajeACT.trim() === "") return;
+
+    socket.emit("sendMessage", {
+      room: sala,
+      nombre,
+      message: mensajeACT
+    });
+
+    setMensajeACT("");
   }
 
   return (
-    <>
-      <div className={styles.container}>
-        <main className={styles.chatArea}>
-          <div
-            className={clsx(styles.role, {
-              [styles.roleImpostor]: impostor,
-              [styles.roleJugador]: !impostor,
-            })}
-          >
-            Tu rol es:{" "}
-            <span>
-              {impostor ? "Impostor" : "Jugador y tu palabra es: Pepe"}
-            </span>
-          </div>
+    <div className={styles.container}>
+      <main className={styles.chatArea}>
+        <div
+          className={clsx(styles.role, {
+            [styles.roleImpostor]: impostor,
+            [styles.roleJugador]: !impostor,
+          })}
+        >
+          Tu rol es:{" "}
+          <span>{impostor ? "Impostor" : "Jugador y tu palabra es: Pepe"}</span>
+        </div>
 
-          <div className={styles.messages}>
-            {mensajes.map((mensaje, index) => (
-              <Mensaje
-                key={index}
-                className={clsx(styles.message, {
-                  [styles.messagePropioImpostor]: propietario && impostor,
-                  [styles.messageOtroImpostor]: !propietario && impostor,
-                  [styles.messagePropioJugador]: propietario && !impostor,
-                  [styles.messageOtroJugador]: !propietario && !impostor,
-                })}
-                text={mensaje}
-              />
-            ))}
-          </div>
-          <div className={styles.inputRow}>
-            <Input
-              tipo="chat"
-              placeholder="Escribí un mensaje..."
-              value={mensajeACT}
-              onChange={manejarCambio}
-            />
-            <Boton
-              className={clsx({
-                [styles.botonImpostor]: impostor,
-                [styles.botonJugador]: !impostor,
+        <div className={styles.messages}>
+          {mensajes.map((msg, index) => (
+            <Mensaje
+              key={index}
+              className={clsx(styles.message, {
+                [styles.messagePropioImpostor]: msg.nombre === nombre && impostor,
+                [styles.messageOtroImpostor]: msg.nombre !== nombre && impostor,
+                [styles.messagePropioJugador]: msg.nombre === nombre && !impostor,
+                [styles.messageOtroJugador]: msg.nombre !== nombre && !impostor,
               })}
-              text="Enviar"
-              onClick={enviarMensaje}
+              text={`${msg.nombre}: ${msg.texto}`}
             />
-          </div>
-        </main>
-        <aside className={styles.sidebar}>
-          <h2>Jugadores</h2>
-          <ul className={styles.playerList}>
-            {userList.length > 0 ? (
-              userList.map((usuario) => (
-                <Usuario
-                  key={usuario.idUser}
-                  className={styles.player}
-                  text={usuario.nombre}
-                  nombre={usuario.nombre}
-                />
-              ))
-            ) : (
-              <p>No hay jugadores conectados.</p>
-            )}
-          </ul>
-        </aside>
-      </div>
-    </>
+          ))}
+        </div>
+
+        <div className={styles.inputRow}>
+          <Input
+            tipo="chat"
+            placeholder="Escribí un mensaje..."
+            value={mensajeACT}
+            onChange={(e) => setMensajeACT(e.target.value)}
+          />
+          <Boton
+            className={clsx({
+              [styles.botonImpostor]: impostor,
+              [styles.botonJugador]: !impostor,
+            })}
+            text="Enviar"
+            onClick={enviarMensaje}
+          />
+        </div>
+      </main>
+
+      <aside className={styles.sidebar}>
+        <h2>Jugadores</h2>
+        <ul className={styles.playerList}>
+          {userList.length > 0 ? (
+            userList.map((usuario) => (
+              <Usuario
+                key={usuario.idUser}
+                className={styles.player}
+                text={usuario.nombre}
+                nombre={usuario.nombre}
+              />
+            ))
+          ) : (
+            <p>No hay jugadores conectados.</p>
+          )}
+        </ul>
+      </aside>
+    </div>
   );
-}
+} 

@@ -61,8 +61,9 @@ io.on("connection", (socket) => {
 		io.emit('pingAll', { event: "Ping to all", message: data });
 	});
 
-	socket.on('sendMessage', data => {
-		io.to(req.session.room).emit('newMessage', { room: req.session.room, message: data });
+	socket.on("sendMessage", ({ room, nombre, message }) => {
+		io.to(room).emit("newMessage", { nombre, message });
+		 console.log("RECIBÍ:", data); 
 	});
 
 	socket.on('disconnect', () => {
@@ -104,29 +105,33 @@ app.get('/usuarios', async function (req, res) {
 });
 
 app.post('/jugadores', async function (req, res) {
-  try {
-    // Traer SOLO los id de esa sala
-    const idJugadores = await realizarQuery(`
+	try {
+		//Tizi: Traer SOLO los id de esa sala
+		const idJugadores = await realizarQuery(`
       SELECT idUser FROM UsuariosPorSala WHERE idRoom = '${req.body.idRoom}'`);
-    if (idJugadores.length === 0) {
-      return res.send({ mensaje: [] });
-    }
+		// Si no hay jugadores, devolver array vacio
+		if (idJugadores.length === 0) {
+			return res.send({ mensaje: [] });
+		}
 
-    // Convertir la lista en un formato usable (id1, id2, id3)
-    const listaIds = idJugadores.map(u => u.idUser).join(",");
+		// Conver la lista en un formato (id1, id2, id3) eso pasa con join
+		// que lo pone con comas,si fuera solo map seria [n,n]. (funca pero tengo que revisar)
+		//  (si se lo guardaba de otra forma no c xq mierda no le gustaba >:/) )
+		const listaIds = idJugadores.map(u => u.idUser).join(",");
 
-    // Paso 3: Traer los usuarios correspondientes
-    const jugadores = await realizarQuery(`
+		// Traer los usu con los id que guardo el map
+		const jugadores = await realizarQuery(`
       SELECT idUser, nombre, fotoPerfil 
       FROM Usuarios 
       WHERE idUser IN (${listaIds})
     `);
 
-    res.send({ mensaje: jugadores });
-  } catch (error) {
-    console.error("Error en /jugadores:", error);
-    res.send({ mensaje: "error", error });
-  }
+		// Enviar la lista de jugadores id al front
+		res.send({ mensaje: jugadores });
+	} catch (error) {
+		console.error("Error en /jugadores:", error);
+		res.send({ mensaje: "error", error });
+	}
 });
 
 
@@ -237,13 +242,14 @@ app.post('/buscarEnSala', async function (req, res) {
 	respuesta = await realizarQuery(`
       SELECT idUser FROM UsuariosPorSala
       WHERE idRoom = "${req.body.idRoom}"`)
-res.send(respuesta)});
+	res.send(respuesta)
+});
 
 
-
+//Tizi: fataba where idRoom = ${req.body.idRoom} sino subia imp a todos las salas en las que estaba el user
 app.put("/actualizarImpostor", async function (req, res) {
-		await realizarQuery(`UPDATE UsuariosPorSala SET impostor = true where idUser= '${req.body.idUser}' AND idRoom = '${req.body.idRoom}'`)
+	await realizarQuery(`UPDATE UsuariosPorSala SET impostor = true where idUser= '${req.body.idUser}' AND idRoom = '${req.body.idRoom}'`)
 
-		res.send({ mensaje: "Se modifico el usuario" })
+	res.send({ mensaje: "Se modifico el usuario" })
 });
 
