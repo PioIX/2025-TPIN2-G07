@@ -172,9 +172,9 @@ app.post('/buscarUsuario', async function (req, res) {
 app.post('/buscarSala', async function (req, res) {
 	try {
 		console.log(req.body)
-		check = await realizarQuery(`SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`)
-		console.log(check)
-		if (check.length == 0) {
+		let arreglateputo = await realizarQuery(`SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`)
+		console.log(arreglateputo)
+		if (arreglateputo.length == 0) {
 			res.send({ mensaje: "La sala no existe", crearSala: true })
 		} else {
 			id = await realizarQuery(`SELECT idRoom FROM Rooms WHERE idRoom = '${req.body.idRoom}'`)
