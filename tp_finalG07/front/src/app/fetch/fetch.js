@@ -1,7 +1,9 @@
 export async function jugadores(dato) {
   try {
+    // consoles para debug
     console.log("👉 Enviando:", dato);
     console.log("🌐 Contactando backend en: http://localhost:4000/jugadores");
+
     const res = await fetch("http://localhost:4000/jugadores", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -9,6 +11,8 @@ export async function jugadores(dato) {
     });
 
     const data = await res.json();
+    // confima el formato de data y sino lo transforma en array vacio,
+    //  evita que el map desp no funque
     return Array.isArray(data.mensaje) ? data.mensaje : [];
 
   } catch (error) {

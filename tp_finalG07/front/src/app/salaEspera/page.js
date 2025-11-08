@@ -62,7 +62,7 @@ export default function salaEspera() {
     }
   }
 
-  if (segundos === 10) {
+  if (segundos === 40) {
     router.push(`./chat?nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}`);
   }
 }, [segundos]);

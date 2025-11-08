@@ -20,10 +20,25 @@ export default function Votacion() {
     cargar();
   }, [sala]);
 
-  function votar() {
-    if (selectedUser === null) return;
-    alert("Votaste a: " + userList[selectedUser].nombre);
+ async function votar() {
+  if (selectedUser === null) {
+    alert("Debes seleccionar a alguien.");
+    return;
   }
+
+  const idVotado = userList[selectedUser].idUser;
+// falta fetch Y PEDIDO a verificarImpostor
+  /*const respuesta = await verificarImpostor({
+    idUser: idVotado,
+    idRoom: sala
+  });
+*/
+  if (respuesta?.esImpostor === true) {
+    alert("Correcto: Lo atrapaste, era el impostor.");
+  } else {
+    alert("Incorrecto: Ese jugador era inocente.");
+  }
+}
 
   return (
     <>
