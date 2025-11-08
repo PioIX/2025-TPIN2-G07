@@ -7,6 +7,7 @@
   color: #fff;
   font-family: 'Poppins', sans-serif;
   overflow: hidden;
+  
 }
 
 /* ====== PANEL DERECHO: CHAT ====== */
@@ -17,9 +18,11 @@
   justify-content: space-between;
   padding: 2rem 3rem;
   position: relative;
-  background: rgba(30, 0, 0, 0.75);
-  border-right: 2px solid rgba(255, 0, 0, 0.2);
-  backdrop-filter: blur(6px);
+  background-image: url(/upscalemedia-transformed.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  backdrop-filter: blur(1.6rem);
 }
 
 /* ====== PANEL IZQUIERDO: LISTA DE JUGADORES ====== */

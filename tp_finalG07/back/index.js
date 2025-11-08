@@ -63,7 +63,6 @@ io.on("connection", (socket) => {
 
 	socket.on("sendMessage", ({ room, nombre, message }) => {
 		io.to(room).emit("newMessage", { nombre, message });
-		 console.log("RECIBÍ:", data); 
 	});
 
 	socket.on('disconnect', () => {
@@ -146,7 +145,7 @@ app.post('/crearUsuario', async function (req, res) {
             ("${req.body.nombre}", "${req.body.contraseña}")`)
 			let resTemp = await realizarQuery(`SELECT idUser FROM Usuarios WHERE nombre = "${req.body.nombre}"`)
 			await realizarQuery(`UPDATE Usuarios SET fotoPerfil = "https://robohash.org/${resTemp[0].idUser}" WHERE idUser = ${resTemp[0].idUser}`)
-			res.send(await realizarQuery(`SELECT idUser FROM Usuarios WHERE nombre = '${req.body.nombre}'`))
+			res.send(await realizarQuery(`SELECT * FROM Usuarios WHERE nombre = '${req.body.nombre}'`))
 		}
 	} catch (error) {
 		res.send({ mensaje: "error", error })
@@ -160,8 +159,8 @@ app.post('/buscarUsuario', async function (req, res) {
 		if (check.length = 0) {
 			res.send({ mensaje: "El usuario no existe" })
 		} else {
-			id = await realizarQuery(`SELECT idUser FROM Usuarios WHERE nombre = '${req.body.nombre}'`)
-			res.send(id)
+			respuesta = await realizarQuery(`SELECT * FROM Usuarios WHERE nombre = '${req.body.nombre}'`)
+			res.send(respuesta)
 		}
 	} catch (error) {
 		res.send({ mensaje: "error", error })

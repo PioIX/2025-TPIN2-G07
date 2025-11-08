@@ -15,6 +15,7 @@ export default function Lobby() {
     const [sala, setSala] = useState("");
     const searchParams = useSearchParams();
     const id = searchParams.get("id");
+    const usuario = searchParams.get("usuario");
     async function unirse() {
         if (nombre !== "" && sala !== "") {
             const respuesta = await buscarSala({ nombreRoom: nombre, idRoom: sala });
@@ -30,7 +31,7 @@ export default function Lobby() {
             if (respuesta.crearSala) {
                 let respuestaCrear = await crearSala({ nombreRoom: nombre, idRoom: sala })
                 if (respuestaCrear.avanzar) {
-                    router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=TRUE`)
+                    router.push(`./salaEspera?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=TRUE`)
                 } else {
 
                     alert("La sala ya existe")
