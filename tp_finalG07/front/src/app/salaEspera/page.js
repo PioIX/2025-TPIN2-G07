@@ -21,6 +21,7 @@ export default function salaEspera() {
   const sala = searchParams.get("sala");
   const id = searchParams.get("id");
   const admin = searchParams.get("admin")
+  const usuario = searchParams.get("usuario");
 
 
 
@@ -63,7 +64,7 @@ export default function salaEspera() {
   }
 
   if (segundos === 40) {
-    router.push(`./chat?nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}`);
+    router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}`);
   }
 }, [segundos]);
 

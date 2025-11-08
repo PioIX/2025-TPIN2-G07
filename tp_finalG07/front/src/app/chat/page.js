@@ -21,10 +21,12 @@ export default function Chat() {
   const [mensajeACT, setMensajeACT] = useState("");
   const [mensajes, setMensajes] = useState([]);
   const [userList, setUserList] = useState([]);
+  
 
   const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
   const sala = searchParams.get("sala");
+  const usuario = searchParams.get("usuario");
 
   console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
 
@@ -62,7 +64,7 @@ export default function Chat() {
 
     socket.emit("sendMessage", {
       room: sala,
-      nombre,
+      nombre: usuario,
       message: mensajeACT
     });
 
@@ -87,12 +89,13 @@ export default function Chat() {
             <Mensaje
               key={index}
               className={clsx(styles.message, {
-                [styles.messagePropioImpostor]: msg.nombre === nombre && impostor,
-                [styles.messageOtroImpostor]: msg.nombre !== nombre && impostor,
-                [styles.messagePropioJugador]: msg.nombre === nombre && !impostor,
-                [styles.messageOtroJugador]: msg.nombre !== nombre && !impostor,
+                [styles.messagePropioImpostor]: msg.nombre === usuario && impostor,
+                [styles.messageOtroImpostor]: msg.nombre !== usuario && impostor,
+                [styles.messagePropioJugador]: msg.nombre === usuario && !impostor,
+                [styles.messageOtroJugador]: msg.nombre !== usuario && !impostor,
               })}
-              text={`${msg.nombre}: ${msg.texto}`}
+              text={`${msg.texto}`}
+              nombre={`${msg.nombre}`}
             />
           ))}
         </div>
@@ -120,7 +123,7 @@ export default function Chat() {
         <ul className={styles.playerList}>
           {userList.length > 0 ? (
             userList.map((usuario) => (
-              <Usuario
+              <Usuario          
                 key={usuario.idUser}
                 className={styles.player}
                 text={usuario.nombre}

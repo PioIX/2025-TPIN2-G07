@@ -22,11 +22,11 @@ export default function Login() {
       const respuesta = await crearUsuario({ nombre: nombre, contraseña: contraseña });
       console.log(respuesta);
 
-      router.push(`./lobby?id=${respuesta.idUser}`);
+      router.push(`./lobby?usuario=${respuesta[0].nombre}&id=${respuesta[0].idUser}`);
     } else {
       const respuesta = await buscarUsuario({ nombre: nombre, contraseña: contraseña });
       console.log(respuesta);
-      router.push(`./lobby?id=${respuesta[0].idUser}`);
+      router.push(`./lobby?usuario=${respuesta[0].nombre}&id=${respuesta[0].idUser}`);
     }
 
   }
