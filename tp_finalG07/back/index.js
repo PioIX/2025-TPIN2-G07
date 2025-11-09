@@ -56,6 +56,13 @@ io.on("connection", (socket) => {
 		io.to(req.session.room).emit('chat-messages', { user: req.session.user, room: req.session.room });
 	});
 
+	socket.on("cambioTurnoEnviar", data =>{
+		data.index = data.index + 1
+		io.to(req.session.room).emit("cambioTurnoRecibir", {
+			index: data.index
+		})
+	})
+
 	socket.on('pingAll', data => {
 		console.log("PING ALL: ", data);
 		io.emit('pingAll', { event: "Ping to all", message: data });
@@ -175,6 +182,9 @@ app.post('/buscarSala', async function (req, res) {
 		let arreglateputo = await realizarQuery(`SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`)
 		console.log(arreglateputo)
 		if (arreglateputo.length == 0) {
+		let check = await realizarQuery(`SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`)
+		console.log(check)
+		if (check.length == 0) {
 			res.send({ mensaje: "La sala no existe", crearSala: true })
 		} else {
 			id = await realizarQuery(`SELECT idRoom FROM Rooms WHERE idRoom = '${req.body.idRoom}'`)

@@ -19,7 +19,7 @@ export default function Lobby() {
     async function unirse() {
         if (nombre !== "" && sala !== "") {
             const respuesta = await buscarSala({ nombreRoom: nombre, idRoom: sala });
-            console.log(respuesta);
+            console.log("conectandose a la sala", respuesta);
             if (respuesta.length > 0) { router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=FALSE`) }
             else { alert("La sala no existe") };
         }
