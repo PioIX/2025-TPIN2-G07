@@ -177,8 +177,8 @@ app.post('/buscarUsuario', async function (req, res) {
 
 
 app.post('/buscarSala', async function (req, res) {
-	try {
-		console.log(req.body)
+	try {		console.log(req.body)
+
 		let arreglateputo = await realizarQuery(`SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`)
 		console.log(arreglateputo)
 		if (arreglateputo.length == 0) {
@@ -190,6 +190,7 @@ app.post('/buscarSala', async function (req, res) {
 			id = await realizarQuery(`SELECT idRoom FROM Rooms WHERE idRoom = '${req.body.idRoom}'`)
 			res.send({ sala: id[0], crearSala: false })
 		}
+	}
 	} catch (error) {
 		res.send({ mensaje: "error", error })
 	}
