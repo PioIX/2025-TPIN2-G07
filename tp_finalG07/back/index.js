@@ -182,6 +182,7 @@ app.post('/buscarSala', async function (req, res) {
 		let arreglateputo = await realizarQuery(`SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`)
 		console.log(arreglateputo)
 		if (arreglateputo.length == 0) {
+
 		let check = await realizarQuery(`SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`)
 		console.log(check)
 		if (check.length == 0) {
