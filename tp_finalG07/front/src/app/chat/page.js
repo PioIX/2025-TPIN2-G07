@@ -2,7 +2,7 @@
 //Hay que corregir que no se pueden unir usu el mismo error de antes si te unis 
 // te dice q no existe la sala y si creas que ya existe (eso esta bien) lo marca en buscarSala
 // fijarse nombre de usu que lo pone comoo el nombre de la sala, deberia estae en el back
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import clsx from "clsx";
 import Usuario from "../componentes/Usuario";
 import styles from "./page.module.css";
@@ -13,8 +13,8 @@ import Mensaje from "../componentes/Mensaje";
 import { useSearchParams } from "next/navigation";
 import { jugadores } from "../fetch/fetch";
 
-let propietario = true;
-let impostor = true;
+
+
 
 export default function Chat() {
   const { socket } = useSocket();
@@ -27,8 +27,18 @@ export default function Chat() {
   const nombre = searchParams.get("nombre");
   const sala = searchParams.get("sala");
   const usuario = searchParams.get("usuario");
-
+  const idImpostor = searchParams.get("impostor");
+  
+  
   console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
+
+let impostor = true
+
+  useEffect(() => {
+    if(usuario != idImpostor){
+    impostor = false;
+  }
+  }, []);
 
   // Carga de jugadores
   useEffect(() => {
