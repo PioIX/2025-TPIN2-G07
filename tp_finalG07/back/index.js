@@ -56,7 +56,7 @@ io.on("connection", (socket) => {
 		io.to(req.session.room).emit('chat-messages', { user: req.session.user, room: req.session.room });
 	});
 
-	socket.on("cambioTurnoEnviar", data =>{
+	socket.on("cambioTurnoEnviar", data => {
 		data.index = data.index + 1
 		io.to(req.session.room).emit("cambioTurnoRecibir", {
 			index: data.index
@@ -177,22 +177,19 @@ app.post('/buscarUsuario', async function (req, res) {
 
 
 app.post('/buscarSala', async function (req, res) {
-	try {		console.log(req.body)
+	try {
+		console.log(req.body)
 
 		let arreglateputo = await realizarQuery(`SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`)
-		console.log(arreglateputo)
+		console.log("sala encontrada", arreglateputo)
 		if (arreglateputo.length == 0) {
-
-		let check = await realizarQuery(`SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`)
-		console.log(check)
-		if (check.length == 0) {
 			res.send({ mensaje: "La sala no existe", crearSala: true })
 		} else {
 			id = await realizarQuery(`SELECT idRoom FROM Rooms WHERE idRoom = '${req.body.idRoom}'`)
 			res.send({ sala: id[0], crearSala: false })
 		}
 	}
-	} catch (error) {
+	catch (error) {
 		res.send({ mensaje: "error", error })
 	}
 
@@ -260,7 +257,6 @@ app.post('/buscarEnSala', async function (req, res) {
 //Tizi: fataba where idRoom = ${req.body.idRoom} sino subia imp a todos las salas en las que estaba el user
 app.put("/actualizarImpostor", async function (req, res) {
 	await realizarQuery(`UPDATE UsuariosPorSala SET impostor = true where idUser= '${req.body.idUser}' AND idRoom = '${req.body.idRoom}'`)
-
-	res.send({ mensaje: "Se modifico el usuario" })
+	res.send({ mensaje: "Se modifico el usuario", impostor:  req.body.idUser})
 });
 
