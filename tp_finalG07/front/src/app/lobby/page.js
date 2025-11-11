@@ -20,7 +20,7 @@ export default function Lobby() {
         if (nombre !== "" && sala !== "") {
             const respuesta = await buscarSala({ nombreRoom: nombre, idRoom: sala });
             console.log("conectandose a la sala", respuesta);
-            if (respuesta.sala !=  undefined) { router.push(`./salaEspera?nombre=${nombre}&sala=${sala}&id=${id}&admin=FALSE`) }
+            if (respuesta.sala !=  undefined) { router.push(`./salaEspera?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=FALSE`) }
             else { alert("La sala no existe") };
         }
     }

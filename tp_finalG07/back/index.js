@@ -263,6 +263,6 @@ app.put("/actualizarImpostor", async function (req, res) {
 app.post('/palabraAleatoria', async function (req, res) {
 	respuesta = await realizarQuery(`
       SELECT * FROM Palabras
-      WHERE idPalabra = "${Math.floor(Math.random() * 10)}"`)
-	res.send(respuesta)
+      WHERE idPalabra = ${Math.floor(Math.random() * 10)+1}`)
+	res.send({palabra: respuesta})
 });

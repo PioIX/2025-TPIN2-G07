@@ -21,24 +21,26 @@ export default function Chat() {
   const [mensajeACT, setMensajeACT] = useState("");
   const [mensajes, setMensajes] = useState([]);
   const [userList, setUserList] = useState([]);
-  
+  const [impostor, setImpostor] = useState("");
 
   const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
   const sala = searchParams.get("sala");
   const usuario = searchParams.get("usuario");
   const idImpostor = searchParams.get("impostor");
-  
-  
+  const id = searchParams.get("id");
+  const palabra = searchParams.get("palabra")
+
   console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
 
-let impostor = true
-
   useEffect(() => {
-    if(usuario != idImpostor){
-    impostor = false;
-  }
-  }, []);
+    console.log(`ID Impostor: ${idImpostor}, ID Usuario: ${id}`);
+    if (id != idImpostor) {
+      setImpostor(false);
+      console.log("impostor", impostor);
+    }
+    else {setImpostor(true)}
+  }, [, usuario, idImpostor]);
 
   // Carga de jugadores
   useEffect(() => {
@@ -91,7 +93,7 @@ let impostor = true
           })}
         >
           Tu rol es:{" "}
-          <span>{impostor ? "Impostor" : "Jugador y tu palabra es: Pepe"}</span>
+          <span>{impostor ? "Impostor" : `Jugador y tu palabra es: ${palabra}`}</span>
         </div>
 
         <div className={styles.messages}>
@@ -133,7 +135,7 @@ let impostor = true
         <ul className={styles.playerList}>
           {userList.length > 0 ? (
             userList.map((usuario) => (
-              <Usuario          
+              <Usuario
                 key={usuario.idUser}
                 className={styles.player}
                 text={usuario.nombre}
