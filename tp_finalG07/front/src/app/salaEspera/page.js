@@ -16,14 +16,16 @@ export default function salaEspera() {
   const [idIntervalo, setIdIntervalo] = useState(null);
   const [jugadores, setJugadores] = useState([]);
   const [idImpostor, setIdImpostor] = useState([]);
-  const [palabra, setPalabra] = useState("");
+  const [palabrita, setPalabrita] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
   const sala = searchParams.get("sala");
   const id = searchParams.get("id");
   const admin = searchParams.get("admin")
-  const usuario = searchParams.get("usuario");
+  const usuario = searchParams.get("usuario")
+  
+
 
 
 
@@ -58,9 +60,10 @@ export default function salaEspera() {
             idRoom: sala
           });
           const res = await palabraAleatoria();
-          console.log("Respuesta definir impostor: ", respuesta)
+          console.log("Respuesta definir impostor: ", respuesta);
          setIdImpostor(respuesta.impostor);
-         setPalabra(res.palabra)
+         setPalabrita(res.palabra);
+         console.log("Palabra asignada: ", res.palabra);
         }
       }
       buscaSalas();
@@ -68,7 +71,7 @@ export default function salaEspera() {
   }
 
   if (segundos === 40) {
-    router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${idImpostor}&palabra=$${palabra}}`);
+    router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${idImpostor}&palabra=${palabrita}`);
   }
 }, [segundos]);
 
