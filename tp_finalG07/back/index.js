@@ -260,3 +260,9 @@ app.put("/actualizarImpostor", async function (req, res) {
 	res.send({ mensaje: "Se modifico el usuario", impostor:  req.body.idUser})
 });
 
+app.post('/palabraAleatoria', async function (req, res) {
+	respuesta = await realizarQuery(`
+      SELECT * FROM Palabras
+      WHERE idPalabra = "${Math.floor(Math.random() * 10)}"`)
+	res.send(respuesta)
+});

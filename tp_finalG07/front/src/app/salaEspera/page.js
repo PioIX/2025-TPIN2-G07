@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 import Title from "../componentes/Title";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { agregarASala, buscarEnSala, definirImpostor } from "../fetch/fetch";
+import { agregarASala, buscarEnSala, definirImpostor, palabraAleatoria } from "../fetch/fetch";
 
 
 let siempre = true;
@@ -16,6 +16,7 @@ export default function salaEspera() {
   const [idIntervalo, setIdIntervalo] = useState(null);
   const [jugadores, setJugadores] = useState([]);
   const [idImpostor, setIdImpostor] = useState([]);
+  const [palabra, setPalabra] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
@@ -56,8 +57,10 @@ export default function salaEspera() {
             idUser: impostorinador.idUser,
             idRoom: sala
           });
+          const res = await palabraAleatoria();
           console.log("Respuesta definir impostor: ", respuesta)
          setIdImpostor(respuesta.impostor);
+         setPalabra(res.palabra)
         }
       }
       buscaSalas();
@@ -65,7 +68,7 @@ export default function salaEspera() {
   }
 
   if (segundos === 40) {
-    router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${idImpostor}`);
+    router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${idImpostor}&palabra=$${palabra}}`);
   }
 }, [segundos]);
 
