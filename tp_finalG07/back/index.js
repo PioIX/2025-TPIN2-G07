@@ -56,7 +56,90 @@ io.on("connection", (socket) => {
 		io.to(req.session.room).emit('chat-messages', { user: req.session.user, room: req.session.room });
 	});
 
-	socket.on("cambioTurnoEnviar", data => {
+	// crea un array salas para juardar los jugadores x salita
+	socket.on("entrar_sala", async ({ idRoom, idUser }) => {
+
+		socket.join(idRoom);
+		if (!salas[idRoom]) {
+			salas[idRoom] = {
+				jugadores: [],
+				turnoActual: 0,
+				mensajesEnRonda: 0
+			};
+		}
+
+		salas[idRoom].jugadores.push({
+			idUser,
+			socketId: socket.id
+		});
+
+		// ping all en la sala y pasa los jugadores
+		io.to(idRoom).emit("jugadores_sala", salas[idRoom].jugadores);
+
+		// x orden en que entraron, el turno
+		if (salas[idRoom].jugadores.length === 1) {
+			io.to(idRoom).emit("turno", salas[idRoom].jugadores[0].idUser);
+		}
+	});
+
+	// Mensaje con control de turno (me ayudo chati a revisar)
+	socket.on("mensaje", ({ idRoom, idUser, texto }) => {
+		const sala = salas[idRoom];
+		if (!sala) return;
+
+		const jugadorTurno = sala.jugadores[sala.turnoActual];
+
+		// Restringir mensaje
+		if (idUser !== jugadorTurno.idUser) return;
+
+		// Enviar mensaje
+		io.to(idRoom).emit("mensaje", {
+			idUser,
+			texto
+		});
+
+		sala.mensajesEnRonda++;
+
+		// Pasar turno
+		sala.turnoActual = (sala.turnoActual + 1) % sala.jugadores.length;
+
+		// Si hablaron todos → votación
+		if (sala.mensajesEnRonda >= sala.jugadores.length) {
+			sala.mensajesEnRonda = 0;
+			io.to(idRoom).emit("votacion", true);
+		} else {
+			io.to(idRoom).emit("turno", sala.jugadores[sala.turnoActual].idUser);
+		}
+	});
+
+	// Fin votación → nueva ronda
+	socket.on("fin_votacion", (idRoom) => {
+		if (!salas[idRoom]) return;
+		salas[idRoom].turnoActual = 0;
+		salas[idRoom].mensajesEnRonda = 0;
+		io.to(idRoom).emit("turno", salas[idRoom].jugadores[0].idUser);
+	});
+
+	socket.on("disconnect", () => {
+		// Eliminar jugador desconectado en cada sala
+		for (const idRoom in salas) {
+			salas[idRoom].jugadores = salas[idRoom].jugadores.filter(j => j.socketId !== socket.id);
+
+			// Si la sala queda vacía → eliminar
+			if (salas[idRoom].jugadores.length === 0) {
+				delete salas[idRoom];
+				continue;
+			}
+
+			// Ajustar turno si se pasó
+			if (salas[idRoom].turnoActual >= salas[idRoom].jugadores.length) {
+				salas[idRoom].turnoActual = 0;
+			}
+
+			io.to(idRoom).emit("turno", salas[idRoom].jugadores[salas[idRoom].turnoActual].idUser);
+		}
+	});
+	/*socket.on("cambioTurnoEnviar", data => {
 		data.index = data.index + 1
 		if (data.index > data.tamañoSala) {
 			data.index = 1
@@ -73,7 +156,7 @@ io.on("connection", (socket) => {
 
 	socket.on("sendMessage", ({ room, nombre, message }) => {
 		io.to(room).emit("newMessage", { nombre, message });
-	});
+	});*/
 
 	socket.on('disconnect', () => {
 		console.log("Disconnect");
@@ -259,12 +342,12 @@ app.post('/buscarEnSala', async function (req, res) {
 //Tizi: fataba where idRoom = ${req.body.idRoom} sino subia imp a todos las salas en las que estaba el user
 app.put("/actualizarImpostor", async function (req, res) {
 	await realizarQuery(`UPDATE UsuariosPorSala SET impostor = true where idUser= '${req.body.idUser}' AND idRoom = '${req.body.idRoom}'`)
-	res.send({ mensaje: "Se modifico el usuario", impostor:  req.body.idUser})
+	res.send({ mensaje: "Se modifico el usuario", impostor: req.body.idUser })
 });
 
 app.post('/palabraAleatoria', async function (req, res) {
 	respuesta = await realizarQuery(`
       SELECT palabra FROM Palabras
-      WHERE idPalabra = ${Math.floor(Math.random() * 10)+1}`)
+      WHERE idPalabra = ${Math.floor(Math.random() * 10) + 1}`)
 	res.send(respuesta)
 });

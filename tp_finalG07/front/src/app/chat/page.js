@@ -14,14 +14,15 @@ import { useSearchParams } from "next/navigation";
 import { jugadores } from "../fetch/fetch";
 
 
-
-
 export default function Chat() {
   const { socket } = useSocket();
   const [mensajeACT, setMensajeACT] = useState("");
   const [mensajes, setMensajes] = useState([]);
   const [userList, setUserList] = useState([]);
   const [impostor, setImpostor] = useState(true);
+  const [turnoActual, setTurnoActual] = useState(null);
+  const [miTurno, setMiTurno] = useState(false);
+  const [fase, setFase] = useState("espera");
 
   const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
@@ -34,7 +35,7 @@ export default function Chat() {
     let jugadoresEnSala = await jugadores({ idRoom: sala });
   }
   console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
-  
+
   useEffect(() => {
     console.log(`ID Impostor: ${idImpostor}, ID Usuario: ${id}`);
     if (id != idImpostor) {
@@ -61,8 +62,52 @@ export default function Chat() {
     listaJugadores();
   }, [sala]);
 
-  // Recibir mensajes
+  // Iniciar ronda
   useEffect(() => {
+    if (!socket) return;
+
+    socket.on("iniciar_ronda", ({ jugadorInicial }) => {
+      setTurnoActual(jugadorInicial);
+      setFase("chat");
+    });
+
+    return () => socket.off("iniciar_ronda");
+  }, [socket]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("turno", ({ idJugador }) => {
+      setTurnoActual(idJugador);
+    });
+
+    return () => socket.off("turno");
+  }, [socket]);
+
+  useEffect(() => {
+    if (!turnoActual) return;
+    setMiTurno(turnoActual === id); // compara mi id con el turno que manda el server
+  }, [turnoActual, id]);
+
+
+  useEffect(() => {
+    if (!turnoActual) return;
+    setMiTurno(turnoActual === id); // compara mi id con el turno que manda el server
+  }, [turnoActual, id]);
+
+  /// falta el push a votacion
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("votacion", () => {
+      setFase("votacion");
+    });
+
+    return () => socket.off("votacion");
+  }, [socket]);
+
+  // Recibir mensajes
+  /*useEffect(() => {
     if (!socket) return;
 
     socket.on("newMessage", (data) => {
@@ -80,17 +125,20 @@ export default function Chat() {
     if (!socket) return;
     socket.emit("joinRoom", { room: sala });
   }, [socket, sala]);
-
+*/
   function enviarMensaje() {
-    if (!socket || mensajeACT.trim() === "") return;
+    if (!socket || mensajeACT.trim() === "" || !miTurno) return;
 
     socket.emit("sendMessage", {
       room: sala,
       nombre: usuario,
       message: mensajeACT
     });
-    socket.emit("cambioTurnoEnviar", { room: sala ,tamañoSala: tamañoSala});
+    setMensajeACT("");
+    console.log("sending message", { room: sala, nombre: usuario, message: mensajeACT });
+    socket.emit("cambioTurno", { room: sala });
   }
+
 
   return (
     <div className={styles.container}>
@@ -124,16 +172,19 @@ export default function Chat() {
         <div className={styles.inputRow}>
           <Input
             tipo="chat"
-            placeholder="Escribí un mensaje..."
+            placeholder={miTurno ? "Escribí un mensaje..." : "Esperando tu turno..."}
             value={mensajeACT}
+            disabled={!miTurno || fase !== "chat"}
             onChange={(e) => setMensajeACT(e.target.value)}
           />
+
           <Boton
             className={clsx({
               [styles.botonImpostor]: impostor,
               [styles.botonJugador]: !impostor,
             })}
             text="Enviar"
+            disabled={!miTurno || fase !== "chat"}
             onClick={enviarMensaje}
           />
         </div>

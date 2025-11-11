@@ -20,7 +20,11 @@ export default function Lobby() {
         if (nombre !== "" && sala !== "") {
             const respuesta = await buscarSala({ nombreRoom: nombre, idRoom: sala });
             console.log("conectandose a la sala", respuesta);
-            if (respuesta.sala !=  undefined) { router.push(`./salaEspera?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=FALSE`) }
+            if (respuesta.sala != undefined) {
+                router.push(`./salaEspera?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=FALSE`)
+                socket.emit("entrar_sala", { idRoom: sala, idUser: id });
+                console.log("entrar_sala", { idRoom: sala, idUser: id });
+            }
             else { alert("La sala no existe") };
         }
     }
@@ -32,12 +36,15 @@ export default function Lobby() {
                 let respuestaCrear = await crearSala({ nombreRoom: nombre, idRoom: sala })
                 if (respuestaCrear.avanzar) {
                     router.push(`./salaEspera?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=TRUE`)
-                } else {
+                    socket.emit("entrar_sala", { idRoom: sala, idUser: id });
+                    console.log("entrar_sala", { idRoom: sala, idUser: id });
+                }
+                else {
 
                     alert("La sala ya existe")
                 }
             }
-            else { 
+            else {
                 alert("ya existe una sala con ese numero, o falta llenar un input")
             };
         }
