@@ -58,6 +58,9 @@ io.on("connection", (socket) => {
 
 	socket.on("cambioTurnoEnviar", data => {
 		data.index = data.index + 1
+		if (data.index > data.tamañoSala) {
+			data.index = 1
+		}
 		io.to(req.session.room).emit("cambioTurnoRecibir", {
 			index: data.index
 		})
@@ -119,7 +122,6 @@ app.post('/jugadores', async function (req, res) {
 		if (idJugadores.length === 0) {
 			return res.send({ mensaje: [] });
 		}
-
 		// Conver la lista en un formato (id1, id2, id3) eso pasa con join
 		// que lo pone con comas,si fuera solo map seria [n,n]. (funca pero tengo que revisar)
 		//  (si se lo guardaba de otra forma no c xq mierda no le gustaba >:/) )
@@ -262,7 +264,7 @@ app.put("/actualizarImpostor", async function (req, res) {
 
 app.post('/palabraAleatoria', async function (req, res) {
 	respuesta = await realizarQuery(`
-      SELECT * FROM Palabras
+      SELECT palabra FROM Palabras
       WHERE idPalabra = ${Math.floor(Math.random() * 10)+1}`)
-	res.send({palabra: respuesta})
+	res.send(respuesta)
 });

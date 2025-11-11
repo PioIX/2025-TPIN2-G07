@@ -21,7 +21,7 @@ export default function Chat() {
   const [mensajeACT, setMensajeACT] = useState("");
   const [mensajes, setMensajes] = useState([]);
   const [userList, setUserList] = useState([]);
-  const [impostor, setImpostor] = useState("");
+  const [impostor, setImpostor] = useState(true);
 
   const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
@@ -30,19 +30,29 @@ export default function Chat() {
   const idImpostor = searchParams.get("impostor");
   const id = searchParams.get("id");
   const palabra = searchParams.get("palabra")
-
+  async function cargarJugadores() {
+    let jugadoresEnSala = await jugadores({ idRoom: sala });
+  }
   console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
-
+  
   useEffect(() => {
     console.log(`ID Impostor: ${idImpostor}, ID Usuario: ${id}`);
     if (id != idImpostor) {
       setImpostor(false);
       console.log("impostor", impostor);
     }
-    else {setImpostor(true)}
+    else { setImpostor(true) }
+    async function cargarJugadores() {
+      let jugadoresEnSala = await jugadores({ idRoom: sala });
+      let tamañoSala = jugadoresEnSala.length;
+      console.log("el tamaño de la sala es de:", tamañoSala);
+    }
+    cargarJugadores();
   }, [, usuario, idImpostor]);
 
   // Carga de jugadores
+
+
   useEffect(() => {
     async function listaJugadores() {
       const data = await jugadores({ idRoom: sala });
@@ -79,8 +89,7 @@ export default function Chat() {
       nombre: usuario,
       message: mensajeACT
     });
-
-    setMensajeACT("");
+    socket.emit("cambioTurnoEnviar", { room: sala ,tamañoSala: tamañoSala});
   }
 
   return (

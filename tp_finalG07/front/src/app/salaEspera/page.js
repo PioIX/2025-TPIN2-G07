@@ -61,19 +61,20 @@ export default function salaEspera() {
           });
           const res = await palabraAleatoria();
           console.log("Respuesta definir impostor: ", respuesta);
-         setIdImpostor(respuesta.impostor);
-         setPalabrita(res.palabra);
-         console.log("Palabra asignada: ", res.palabra);
+          console.log("Respuesta palabra aleatoria: ", res);
+          setIdImpostor(respuesta.impostor);
+          setPalabrita(res[0].palabra);
+          console.log("Palabra asignada: ", res[0].palabra);
         }
       }
       buscaSalas();
     }
   }
 
-  if (segundos === 40) {
-    router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${idImpostor}&palabra=${palabrita}`);
+  if (segundos === 10) {
+    router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${idImpostor}&encriptaciónSecretaEdgy=asdpfioewvuoqgfu05v8uq34fvu2340568tu2n0guj6f293umn06t5ijt9384kuy3409kb3lvbu6834908tvuwe309gv82b&palabra=${palabrita}`);
   }
-}, [segundos]);
+}, [segundos,palabrita]);
 
   return (
     <>
