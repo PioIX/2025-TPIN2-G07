@@ -1,6 +1,8 @@
+/* ====== ESTRUCTURA GENERAL ====== */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+
 .bodySala {
   background-color: black;
-  font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;

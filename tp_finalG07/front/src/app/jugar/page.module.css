@@ -5,13 +5,17 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  margin: 0; /* Eliminar márgenes extra */
 }
 
 .container1 {
   text-align: center;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
+  z-index: 2; /* Asegura que los elementos estén por encima del fondo */
 }
 
 .botonJugar {
@@ -65,4 +69,19 @@
   color: rgb(202, 4, 4);
   font-size: 5rem;
   text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.7);
+}
+
+/* Fondo de pantalla */
+.bodyJugar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('image.png'); /* Asegúrate de que la imagen esté en la carpeta public/images */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover; /* Asegura que la imagen cubra todo el área */
+  z-index: 1; /* Asegura que la imagen quede detrás de los demás elementos */
 }

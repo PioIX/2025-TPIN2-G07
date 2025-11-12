@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
-
+/* ====== ESTRUCTURA GENERAL ====== */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
 
 /* ====== ESTRUCTURA GLOBAL ====== */
 .body {
@@ -9,28 +9,47 @@
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  font-family: 'Poppins', Arial, sans-serif; /* misma letra que el lobby */
   background: radial-gradient(circle at top, #1a0000 0%, #000000 100%); /* fondo oscuro */
   color: #fff;
+  position: relative; /* Asegura que el contenido se apile sobre el fondo */
 }
 
 
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600&display=swap');
+
+/* Resto del código... */
 
 .container {
   width: 100vw;
-  height: 100vh;             
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #3a0000;  
+  background-color: #3a0000;
   border: 3px solid #5c0000;
   box-shadow: 0 30px 80px rgba(0,0,0,0.7), inset 0 0 60px rgba(255,0,0,0.04);
   padding: 2.5rem;
   box-sizing: border-box;
+  position: relative; /* Para asegurarse de que el contenido se apile sobre el fondo */
 }
 
+/* Agregar una capa para el fondo de la pantalla */
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('image.png'); /* Coloca la ruta de la imagen aquí */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover; /* Hace que la imagen cubra todo el fondo */
+  z-index: -1; /* Coloca la imagen detrás del contenido */
+}
 
+/* Otras clases */
 .containerInner {
   width: 90%;
   max-width: 520px;
@@ -40,7 +59,6 @@
   gap: 1rem;
   align-items: center;
 }
-
 
 /* ====== HEADER ====== */
 .header {
@@ -53,23 +71,19 @@
   text-shadow: 0 6px 18px rgba(0,0,0,0.6);
 }
 
-
 /* INPUTS: */
 .inputLogin {
   width: 100%;
   padding: 16px 20px;
   font-size: 1.05rem;
   border-radius: 12px;
-  border: 2px solid #5c0000;   
-  background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%); 
+  border: 2px solid #5c0000;
+  background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%);
   color: #3a0000;
-  box-shadow:
-    0 8px 18px rgba(0,0,0,0.6),
-    inset 0 2px 6px rgba(255,255,255,0.9);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.6), inset 0 2px 6px rgba(255,255,255,0.9);
   outline: none;
   transition: transform .12s ease, box-shadow .18s ease, border-color .12s ease;
 }
-
 
 /* placeholder */
 .inputLogin::placeholder {
@@ -77,16 +91,12 @@
   opacity: 0.9;
 }
 
-
 .inputLogin:focus {
   transform: translateY(-2px);
-  border-color: #ff4d4d; 
-  box-shadow:
-    0 12px 30px rgba(0,0,0,0.7),
-    0 0 14px rgba(255,77,77,0.12);
-  background: #ffffff; 
+  border-color: #ff4d4d;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 14px rgba(255,77,77,0.12);
+  background: #ffffff;
 }
-
 
 /* fila con checkbox */
 .row {
@@ -96,7 +106,6 @@
   margin-top: 6px;
 }
 
-
 /* texto del checkbox */
 .h2 {
   font-size: 0.95rem;
@@ -104,14 +113,13 @@
   margin: 0;
 }
 
-
-/*BOTÓN  */
+/* BOTÓN */
 .butonLogin {
   width: 100%;
   max-width: 520px;
   padding: 14px 22px;
   margin-top: 6px;
-  background: #ffffff; 
+  background: #ffffff;
   color: #3a0000;
   border: 2px solid #ffffff;
   border-radius: 12px;
@@ -123,7 +131,6 @@
   box-shadow: 0 12px 30px rgba(0,0,0,0.6);
 }
 
-
 /* hover */
 .butonLogin:hover {
   background: #ff0000;
@@ -132,14 +139,12 @@
   box-shadow: 0 18px 40px rgba(0,0,0,0.7), 0 0 25px rgba(255,0,0,0.14);
 }
 
-
 /* active */
 .butonLogin:active {
   transform: translateY(-1px) scale(0.99);
 }
 
-
-/* mensaje de error  */
+/* mensaje de error */
 .errorMsg {
   color: #ffdddd;
   background: rgba(0,0,0,0.15);
@@ -148,7 +153,6 @@
   font-size: 0.95rem;
 }
 
-
 /* RESPONSIVE */
 @media (max-width: 640px) {
   .header { font-size: 2rem; }
@@ -156,5 +160,3 @@
   .inputLogin { padding: 14px; font-size: 1rem; }
   .butonLogin { font-size: 1rem; padding: 12px 18px; }
 }
-
-
