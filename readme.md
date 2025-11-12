@@ -1,4 +1,5 @@
 PASO A PASO 
+PASO 1 
 pestaña de presentación con el botón de jugar 
 
 <img width="1195" height="572" alt="image" src="https://github.com/user-attachments/assets/3f15f681-5954-4d4a-92f9-0b51b6c17d7b" />
