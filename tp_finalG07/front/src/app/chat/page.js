@@ -104,6 +104,7 @@ if (!socket) return;
 socket.on("cambioTurnoRecibir", (data) => {
     console.log("Turno de: " + jugadoresEnSala[data.index], " me llego: ", data)
     setIndex(data.index)
+    console.log()
       if (jugadoresEnSala[data.index] = jugadoresEnSala[jugadorPropio.idUser]){
         setTurnoPropio(true)
       }
@@ -113,7 +114,7 @@ socket.on("cambioTurnoRecibir", (data) => {
 })}, [socket]);
 
 
-  return (
+  return <>
     <div className={styles.container}>
       <main className={styles.chatArea}>
         <div
@@ -143,6 +144,7 @@ socket.on("cambioTurnoRecibir", (data) => {
         </div>
 
         <div className={styles.inputRow}>
+          {turnoPropio ? <>
           <Input
             tipo="chat"
             placeholder="Escribí un mensaje..."
@@ -156,7 +158,7 @@ socket.on("cambioTurnoRecibir", (data) => {
             })}
             text="Enviar"
             onClick={enviarMensaje}
-          />
+          /></>: "aguarda a tu turno"}
         </div>
       </main>
 
@@ -178,5 +180,6 @@ socket.on("cambioTurnoRecibir", (data) => {
         </ul>
       </aside>
     </div>
-  );
+    </>
+  ;
 } 
