@@ -253,7 +253,7 @@ app.post('/buscarEnSala', async function (req, res) {
 });
 
 
-//Tizi: fataba where idRoom = ${req.body.idRoom} sino subia imp a todos las salas en las que estaba el user
+//Tizi: faltaba where idRoom = ${req.body.idRoom} sino subia imp a todos las salas en las que estaba el user
 app.put("/actualizarImpostor", async function (req, res) {
 	await realizarQuery(`UPDATE UsuariosPorSala SET impostor = true where idUser= '${req.body.idUser}' AND idRoom = '${req.body.idRoom}'`)
 	res.send({ mensaje: "Se modifico el usuario", impostor:  req.body.idUser})
