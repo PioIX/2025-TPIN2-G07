@@ -22,7 +22,7 @@ const server = app.listen(port, () => {
 const io = require('socket.io')(server, {
 	cors: {
 		// IMPORTANTE: REVISAR PUERTO DEL FRONTEND
-		origin: ["http://localhost:3000", "http://localhost:3001"], // Permitir el origen localhost:3000
+		origin: ["http://localhost:3000", "http://localhost:3001","http://localhost:3002","http://localhost:3003","http://localhost:3008","http://localhost:3004","http://localhost:3005","http://localhost:3006","http://localhost:3007",], // Permitir el origen localhost:3000
 		methods: ["GET", "POST", "PUT", "DELETE"],  	// Métodos permitidos
 		credentials: true                           	// Habilitar el envío de cookies
 	}
@@ -262,7 +262,7 @@ app.put("/actualizarImpostor", async function (req, res) {
 app.post('/palabraAleatoria', async function (req, res) {
 	respuesta = await realizarQuery(`
       SELECT palabra FROM Palabras
-      WHERE idPalabra = ${Math.floor(Math.random() * 10)+1}`)
+      WHERE idPalabra = ${Math.floor(Math.random() * 100)+1}`)
 	res.send(respuesta)
 });
 
