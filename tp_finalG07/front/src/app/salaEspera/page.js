@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { agregarASala, buscarEnSala, definirImpostor, palabraAleatoria } from "../fetch/fetch";
 
-
 let siempre = true;
 
 export default function salaEspera() {

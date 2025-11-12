@@ -11,7 +11,7 @@ import Input from "../componentes/Input";
 import { useSocket } from "../hooks/useSocket";
 import Mensaje from "../componentes/Mensaje";
 import { useSearchParams } from "next/navigation";
-import { jugadores } from "../fetch/fetch";
+import { jugadores, traerJugadorPropio } from "../fetch/fetch";
 
 
 
@@ -19,25 +19,29 @@ import { jugadores } from "../fetch/fetch";
 export default function Chat() {
   const { socket } = useSocket();
   const [mensajeACT, setMensajeACT] = useState("");
+  const [jugadorPropio, setJugadorPropio] = useState(0);
   const [mensajes, setMensajes] = useState([]);
   const [userList, setUserList] = useState([]);
   const [impostor, setImpostor] = useState(true);
+  const [turnoPropio, setTurnoPropio] = useState(true);
   const [tamañoSala, setTamañoSala] = useState(0);
-
+  const [turno, setTurno] = useState(0);
   const searchParams = useSearchParams();
+  const [index, setIndex] = useState(0);
   const nombre = searchParams.get("nombre");
   const sala = searchParams.get("sala");
   const usuario = searchParams.get("usuario");
   const idImpostor = searchParams.get("impostor");
   const id = searchParams.get("id");
   const palabra = searchParams.get("palabra")
+  const [jugadoresEnSala, setJugadoresEnSala] = useState([]);
   async function cargarJugadores() {
-    let jugadoresEnSala = await jugadores({ idRoom: sala });
+    setJugadoresEnSala(await jugadores({ idRoom: sala }));
   }
-  console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
-
-
+  
+  
   useEffect(() => {
+    console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
     console.log(`ID Impostor: ${idImpostor}, ID Usuario: ${id}`);
     if (id != idImpostor) {
       setImpostor(false);
@@ -48,6 +52,7 @@ export default function Chat() {
       let jugadoresEnSala = await jugadores({ idRoom: sala });
       setTamañoSala(jugadoresEnSala.length);
       console.log("el tamaño de la sala es de:", tamañoSala);
+      setJugadorPropio(await traerJugadorPropio({idUser: id}))
     }
     cargarJugadores();
   }, [, usuario, idImpostor]);
@@ -91,15 +96,21 @@ export default function Chat() {
       nombre: usuario,
       message: mensajeACT
     });
-    socket.emit("cambioTurnoEnviar", { room: sala, tamañoSala: tamañoSala });
+    socket.emit("cambioTurnoEnviar", { room: sala, tamañoSala: tamañoSala, index: index });
   }
 
-  socket.on("cambioTurnoRecibir", data => {
+  useEffect(() => {    
+if (!socket) return;
+socket.on("cambioTurnoRecibir", (data) => {
+    console.log("Turno de: " + jugadoresEnSala[data.index], " me llego: ", data)
+    setIndex(data.index)
+      if (jugadoresEnSala[data.index] = jugadoresEnSala[jugadorPropio.idUser]){
+        setTurnoPropio(true)
+      }
+      else (setTurnoPropio(false))
 
-    let turno = data.index.index
-    if(tu)
     
-  })
+})}, [socket]);
 
 
   return (

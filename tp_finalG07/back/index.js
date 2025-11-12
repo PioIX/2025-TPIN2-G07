@@ -58,8 +58,8 @@ io.on("connection", (socket) => {
 
 	socket.on("cambioTurnoEnviar", data => {
 		data.index = data.index + 1
-		if (data.index > data.tamañoSala) {
-			data.index = 1
+		if (data.index >= data.tamañoSala) {
+			data.index = 0
 		}
 		io.to(req.session.room).emit("cambioTurnoRecibir", {
 			index: data.index
@@ -264,4 +264,13 @@ app.post('/palabraAleatoria', async function (req, res) {
       SELECT palabra FROM Palabras
       WHERE idPalabra = ${Math.floor(Math.random() * 10)+1}`)
 	res.send(respuesta)
+});
+
+
+
+app.post('/jugadorPropio', async function (req, res) {
+	jugadorPropio = await realizarQuery(`
+      SELECT idUser FROM UsuariosPorSala
+      WHERE idUser = "${req.body.idUser}"`)
+	res.send({ idUser: jugadorPropio })
 });
