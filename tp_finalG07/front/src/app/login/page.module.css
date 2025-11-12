@@ -1,5 +1,4 @@
-/* ====== ESTRUCTURA GENERAL ====== */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
 
 /* ====== ESTRUCTURA GLOBAL ====== */
 .body {
@@ -9,16 +8,24 @@
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  background: radial-gradient(circle at top, #1a0000 0%, #000000 100%); /* fondo oscuro */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(185, 24, 24, 0.7) 100%); /* Degradado transparente de negro a rojo */
+  background-size: cover;
   color: #fff;
   position: relative; /* Asegura que el contenido se apile sobre el fondo */
+  font-family: 'Orbitron', sans-serif; /* Aplica Orbitron a toda la página */
 }
 
+/* ====== ESTRUCTURA GENERAL ====== */
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif; /* Aplica Orbitron a todo el contenedor */
+  overflow: hidden;
+}
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600&display=swap');
-
-/* Resto del código... */
-
+/* Contenedor principal */
 .container {
   width: 100vw;
   height: 100vh;
@@ -26,15 +33,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #3a0000;
-  border: 3px solid #5c0000;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.7), inset 0 0 60px rgba(255,0,0,0.04);
+  background-color: rgba(102, 6, 6, 0.089); /* Fondo rojo translúcido para que se vea la imagen */
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), inset 0 0 60px rgba(104, 9, 9, 0.04);
   padding: 2.5rem;
   box-sizing: border-box;
   position: relative; /* Para asegurarse de que el contenido se apile sobre el fondo */
 }
 
-/* Agregar una capa para el fondo de la pantalla */
+/* Agregar una capa para el fondo de la pantalla (si se desea un fondo adicional detrás del contenido) */
 .container::before {
   content: '';
   position: absolute;
@@ -45,7 +51,7 @@
   background-image: url('image.png'); /* Coloca la ruta de la imagen aquí */
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover; /* Hace que la imagen cubra todo el fondo */
+  background-size: cover;
   z-index: -1; /* Coloca la imagen detrás del contenido */
 }
 
@@ -68,7 +74,7 @@
   color: #ffffff;
   letter-spacing: 1px;
   text-transform: uppercase;
-  text-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  text-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
 }
 
 /* INPUTS: */
@@ -79,8 +85,8 @@
   border-radius: 12px;
   border: 2px solid #5c0000;
   background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%);
-  color: #3a0000;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.6), inset 0 2px 6px rgba(255,255,255,0.9);
+  color: #5c1010;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.9);
   outline: none;
   transition: transform .12s ease, box-shadow .18s ease, border-color .12s ease;
 }
@@ -93,8 +99,8 @@
 
 .inputLogin:focus {
   transform: translateY(-2px);
-  border-color: #ff4d4d;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 14px rgba(255,77,77,0.12);
+  border-color: #080000;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 14px rgba(255, 77, 77, 0.12);
   background: #ffffff;
 }
 
@@ -128,7 +134,7 @@
   letter-spacing: 1px;
   cursor: pointer;
   transition: transform .12s ease, box-shadow .18s ease, background .18s ease;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
 }
 
 /* hover */
@@ -136,7 +142,7 @@
   background: #ff0000;
   color: #ffffff;
   transform: translateY(-3px);
-  box-shadow: 0 18px 40px rgba(0,0,0,0.7), 0 0 25px rgba(255,0,0,0.14);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 0, 0, 0.14);
 }
 
 /* active */
@@ -147,7 +153,7 @@
 /* mensaje de error */
 .errorMsg {
   color: #ffdddd;
-  background: rgba(0,0,0,0.15);
+  background: rgba(0, 0, 0, 0.15);
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 0.95rem;

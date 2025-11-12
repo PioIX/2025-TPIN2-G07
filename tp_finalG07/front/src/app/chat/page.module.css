@@ -1,6 +1,6 @@
 /* ====== ESTRUCTURA GENERAL ====== */
 /* ====== ESTRUCTURA GENERAL ====== */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
 
 /* Actualizando la tipografía */
 .container {
@@ -9,7 +9,7 @@
   width: 100%;
   background: radial-gradient(circle at top, #1a0000 0%, #000 100%);
   color: #fff;
-  font-family: 'Roboto Condensed', sans-serif; /* Cambiado a Roboto Condensed */
+   font-family: 'Orbitron', sans-serif; /* Aplica Orbitron a todo el contenedor */
   overflow: hidden;
 }
 

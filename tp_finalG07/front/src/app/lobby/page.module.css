@@ -1,14 +1,26 @@
-/* ====== ESTRUCTURA GENERAL ====== */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');/* Fondo rojo ocupa toda la pantalla */
+/* Fondo con la imagen que subiste */
 .body {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #3a0000; /* rojo oscuro dominante */
+  background: url('image.png') no-repeat center center fixed; /* Ruta de la imagen */
+  background-size: cover;
   margin: 0;
   padding: 0;
+   font-family: 'Orbitron', sans-serif; /* Aplica Orbitron a todo el contenedor */}
+
+/* ====== ESTRUCTURA GENERAL ====== */
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  color: #fff;
+ font-family: 'Orbitron', sans-serif; /* Aplica Orbitron a todo el contenedor */
+  overflow: hidden;
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
 
 /* Contenedor general (ocupa todo) */
 .modalContent {
@@ -21,6 +33,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background: rgba(14, 1, 1, 0.8); /* Fondo oscuro translúcido para mejor visibilidad */
+  border-radius: 12px;
+  font-family: inherit; /* Hereda la tipografía del contenedor */
 }
 
 /* Título principal */
@@ -32,6 +47,7 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   text-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
+  font-family: inherit; /* Asegura que el título use la misma tipografía */
 }
 
 /* Inputs en lista centrada */
@@ -57,6 +73,7 @@
     inset 0 2px 4px rgba(255, 255, 255, 0.5),
     0 4px 12px rgba(0, 0, 0, 0.4);
   transition: transform 0.2s ease, box-shadow 0.3s ease;
+  font-family: inherit; /* Hereda la tipografía del contenedor */
 }
 
 .inputLobby::placeholder {
@@ -89,6 +106,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+  font-family: inherit; /* Hereda la tipografía del contenedor */
 }
 
 /* Separación entre los dos botones */
