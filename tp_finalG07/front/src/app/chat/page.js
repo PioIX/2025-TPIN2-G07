@@ -22,6 +22,7 @@ export default function Chat() {
   const [mensajes, setMensajes] = useState([]);
   const [userList, setUserList] = useState([]);
   const [impostor, setImpostor] = useState(true);
+  const [tamañoSala, setTamañoSala] = useState(0);
 
   const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
@@ -34,7 +35,8 @@ export default function Chat() {
     let jugadoresEnSala = await jugadores({ idRoom: sala });
   }
   console.log(`🧑‍🚀 Usuario ${nombre} ingresó a la sala ${sala}`);
-  
+
+
   useEffect(() => {
     console.log(`ID Impostor: ${idImpostor}, ID Usuario: ${id}`);
     if (id != idImpostor) {
@@ -44,7 +46,7 @@ export default function Chat() {
     else { setImpostor(true) }
     async function cargarJugadores() {
       let jugadoresEnSala = await jugadores({ idRoom: sala });
-      let tamañoSala = jugadoresEnSala.length;
+      setTamañoSala(jugadoresEnSala.length);
       console.log("el tamaño de la sala es de:", tamañoSala);
     }
     cargarJugadores();
@@ -89,8 +91,16 @@ export default function Chat() {
       nombre: usuario,
       message: mensajeACT
     });
-    socket.emit("cambioTurnoEnviar", { room: sala ,tamañoSala: tamañoSala});
+    socket.emit("cambioTurnoEnviar", { room: sala, tamañoSala: tamañoSala });
   }
+
+  socket.on("cambioTurnoRecibir", data => {
+
+    let turno = data.index.index
+    if(tu)
+    
+  })
+
 
   return (
     <div className={styles.container}>

@@ -122,9 +122,6 @@ app.post('/jugadores', async function (req, res) {
 		if (idJugadores.length === 0) {
 			return res.send({ mensaje: [] });
 		}
-		// Conver la lista en un formato (id1, id2, id3) eso pasa con join
-		// que lo pone con comas,si fuera solo map seria [n,n]. (funca pero tengo que revisar)
-		//  (si se lo guardaba de otra forma no c xq mierda no le gustaba >:/) )
 		const listaIds = idJugadores.map(u => u.idUser).join(",");
 
 		// Traer los usu con los id que guardo el map
