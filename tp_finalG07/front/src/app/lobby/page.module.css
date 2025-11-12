@@ -1,11 +1,11 @@
-/* Fondo rojo ocupa toda la pantalla */
+/* ====== ESTRUCTURA GENERAL ====== */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');/* Fondo rojo ocupa toda la pantalla */
 .body {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   background-color: #3a0000; /* rojo oscuro dominante */
-  font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
 }
