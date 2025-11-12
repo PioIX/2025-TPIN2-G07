@@ -7,11 +7,12 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { agregarASala, buscarEnSala, definirImpostor, palabraAleatoria } from "../fetch/fetch";
 import Boton from "../componentes/Boton";
+import { useSocket } from "../hooks/useSocket";
 
 let siempre = true;
 
 export default function salaEspera() {
-
+  const { socket } = useSocket();
   const [segundos, setSegundos] = useState(0);
   const [idIntervalo, setIdIntervalo] = useState(null);
   const [jugadores, setJugadores] = useState([]);
@@ -28,7 +29,18 @@ export default function salaEspera() {
 
 
 
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("iniciando", (data) => {
+      setComenzar(true)
+      console.log(data.msg)
+    })
+  }, [socket]);
 
+  useEffect(() => {
+    if (!socket) return;
+    socket.emit("joinRoom", { room: sala });
+  }, [, socket, sala]);
 
   useEffect(() => {
     console.log(`el usuario ${nombre} ingresó a la sala ${sala}`)
@@ -36,13 +48,13 @@ export default function salaEspera() {
       await agregarASala({ idUser: id, idRoom: sala, esAdmin: admin });
     }
     armadorDeSalas()
-   
+
 
   }, []);
   useEffect(() => {
     if (comenzar) {
       if (segundos === 1) {
-        if (admin) {
+        if (admin == "TRUE") {
           async function buscaSalas() {
             const lista = await buscarEnSala({ idRoom: sala });
             setJugadores(lista);
@@ -60,6 +72,7 @@ export default function salaEspera() {
               setIdImpostor(respuesta.impostor);
               setPalabrita(res[0].palabra);
               console.log("Palabra asignada: ", res[0].palabra);
+
             }
           }
           buscaSalas();
@@ -74,16 +87,16 @@ export default function salaEspera() {
 
   function iniciar() {
     setComenzar(true)
-     const intervalo = setInterval(() => {
+    const intervalo = setInterval(() => {
       setSegundos((prevSegundos) => prevSegundos + 1);
     }, 1000);
+    socket.emit("comenzarPartida", ({ sala }));
     setIdIntervalo(intervalo);
-
     return () => {
       clearInterval(intervalo);
     };
-  }
 
+  }
 
   return (
     <>
@@ -93,8 +106,9 @@ export default function salaEspera() {
             className={styles.titleSala}
             text={"Esperando jugadores..."}
           ></Title>
-          <h2 className={styles.temporizador}>Temporizador: {segundos}s</h2>
-          <Boton onClick={iniciar} text="iniciar partida"> </Boton>
+          {admin == "TRUE" ? <>
+            {comenzar ? <h2 className={styles.temporizador}>Temporizador: {segundos}s</h2> : <h2 className={styles.temporizador}>Haz click para comenzar la partida</h2>}
+            <Boton onClick={iniciar} text="iniciar partida"> </Boton></> : <h2 className={styles.temporizador}>espera a que el host comience la partida</h2>}
         </div>
       </div>
     </>

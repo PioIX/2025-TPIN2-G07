@@ -18,6 +18,8 @@ export default function Login() {
   const searchParams = useSearchParams();
 
   async function ingresar() {
+    if(!nombre || !contraseña)
+      {return alert("por favor llene todos los campos")}
     if (nuevoUsuario) {
       const respuesta = await crearUsuario({ nombre: nombre, contraseña: contraseña });
       console.log(respuesta);

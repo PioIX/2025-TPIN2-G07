@@ -105,7 +105,7 @@ socket.on("cambioTurnoRecibir", (data) => {
     console.log("Turno de: " + jugadoresEnSala[data.index], " me llego: ", data)
     setIndex(data.index)
     console.log()
-      if (jugadoresEnSala[data.index] = jugadoresEnSala[jugadorPropio.idUser]){
+      if (jugadoresEnSala[index] == jugadoresEnSala[jugadorPropio.idUser]){
         setTurnoPropio(true)
       }
       else (setTurnoPropio(false))
