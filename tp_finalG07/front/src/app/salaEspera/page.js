@@ -31,8 +31,10 @@ export default function salaEspera() {
 
   useEffect(() => {
     if (!socket) return;
+    if (admin);
     socket.on("iniciando", (data) => {
        function iniciar() {
+        console.log("la palabra que llegó del back es: " + data.palabrita)
         setPalabrita(data.palabrita)
         setIdImpostor(data.idImpostor)
     setComenzar(true)
