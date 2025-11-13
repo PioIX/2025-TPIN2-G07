@@ -1,7 +1,5 @@
 "use client";
-//Hay que corregir que no se pueden unir usu el mismo error de antes si te unis 
-// te dice q no existe la sala y si creas que ya existe (eso esta bien) lo marca en buscarSala
-// fijarse nombre de usu que lo pone comoo el nombre de la sala, deberia estae en el back
+
 import { use, useEffect, useState } from "react";
 import clsx from "clsx";
 import Usuario from "../componentes/Usuario";
@@ -97,6 +95,7 @@ export default function Chat() {
       message: mensajeACT
     });
     socket.emit("cambioTurnoEnviar", { room: sala, tamañoSala: tamañoSala, index: index });
+    console.log("enviando")
   }
 
   useEffect(() => {    
@@ -104,8 +103,9 @@ if (!socket) return;
 socket.on("cambioTurnoRecibir", (data) => {
     console.log("Turno de: " + jugadoresEnSala[data.index], " me llego: ", data)
     setIndex(data.index)
+    console.log("recibido " + data.index)
     console.log()
-      if (jugadoresEnSala[index] == jugadoresEnSala[jugadorPropio.idUser]){
+      if (jugadoresEnSala[data.index] == jugadoresEnSala[jugadorPropio.idUser]){
         setTurnoPropio(true)
       }
       else (setTurnoPropio(false))

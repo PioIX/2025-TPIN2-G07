@@ -31,10 +31,10 @@ export default function salaEspera() {
 
   useEffect(() => {
     if (!socket) return;
-    if (admin);
+    if (admin) return;
     socket.on("iniciando", (data) => {
        function iniciar() {
-        console.log("la palabra que llegó del back es: " + data.palabrita)
+        console.log(data.msg)
         setPalabrita(data.palabrita)
         setIdImpostor(data.idImpostor)
     setComenzar(true)
@@ -93,7 +93,7 @@ export default function salaEspera() {
         router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${idImpostor}&encriptaciónSecretaEdgy=asdpfioewvuoqgfu05v8uq34fvu2340568tu2n0guj6f293umn06t5ijt9384kuy3409kb3lvbu6834908tvuwe309gv82b&palabra=${palabrita}`);
       }
     
-  }, [comenzar, segundos, palabrita]);
+  }, [comenzar, segundos, palabrita,idImpostor]);
 
   function iniciar() {
     setComenzar(true)
