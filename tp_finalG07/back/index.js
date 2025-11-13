@@ -78,7 +78,6 @@ io.on("connection", (socket) => {
 	socket.on("comenzarPartida", ({ room }) => {
 		console.log("hasta acá llegó")
 		io.to(room).emit("iniciando",{msg: "Iniciando la partida"})
-		console.log("hasta acá llegó")
 	});
 
 	socket.on('disconnect', () => {

@@ -32,25 +32,37 @@ export default function salaEspera() {
   useEffect(() => {
     if (!socket) return;
     socket.on("iniciando", (data) => {
-      setComenzar(true)
-      console.log(data.msg)
+       function iniciar() {
+    setComenzar(true)
+    const intervalo = setInterval(() => {
+      setSegundos((prevSegundos) => prevSegundos + 1);
+    }, 1000);
+
+    socket.emit("comenzarPartida", ({ sala }));
+    setIdIntervalo(intervalo);
+    return () => {
+      clearInterval(intervalo);
+    };
+
+  }
+  iniciar()
     })
   }, [socket]);
 
-  useEffect(() => {
-    if (!socket) return;
-    socket.emit("joinRoom", { room: sala });
-  }, [, socket, sala]);
+  
 
   useEffect(() => {
     console.log(`el usuario ${nombre} ingresó a la sala ${sala}`)
     async function armadorDeSalas() {
       await agregarASala({ idUser: id, idRoom: sala, esAdmin: admin });
+      
     }
     armadorDeSalas()
-
+        if (!socket) return
+    socket.emit("joinRoom", { room: sala });
 
   }, []);
+
   useEffect(() => {
     if (comenzar) {
       if (segundos === 1) {
@@ -90,6 +102,7 @@ export default function salaEspera() {
     const intervalo = setInterval(() => {
       setSegundos((prevSegundos) => prevSegundos + 1);
     }, 1000);
+
     socket.emit("comenzarPartida", ({ sala }));
     setIdIntervalo(intervalo);
     return () => {
