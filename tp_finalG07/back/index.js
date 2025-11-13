@@ -75,9 +75,9 @@ io.on("connection", (socket) => {
 		io.to(room).emit("newMessage", { nombre, message });
 	});
 
-	socket.on("comenzarPartida", ({ room }) => {
+	socket.on("comenzarPartida", (data) => {
 		console.log("hasta acá llegó")
-		io.to(room).emit("iniciando",{msg: "Iniciando la partida"})
+		io.to(data.room).emit("iniciando",{msg: "Iniciando la partida", palabrita: data.palabrita, idImpostor: data.idImpostor })
 	});
 
 	socket.on('disconnect', () => {

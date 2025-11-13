@@ -33,17 +33,12 @@ export default function salaEspera() {
     if (!socket) return;
     socket.on("iniciando", (data) => {
        function iniciar() {
+        setPalabrita(data.palabrita)
+        setIdImpostor(data.idImpostor)
     setComenzar(true)
     const intervalo = setInterval(() => {
       setSegundos((prevSegundos) => prevSegundos + 1);
     }, 1000);
-
-    socket.emit("comenzarPartida", ({ sala }));
-    setIdIntervalo(intervalo);
-    return () => {
-      clearInterval(intervalo);
-    };
-
   }
   iniciar()
     })
@@ -70,7 +65,6 @@ export default function salaEspera() {
           async function buscaSalas() {
             const lista = await buscarEnSala({ idRoom: sala });
             setJugadores(lista);
-
             if (lista.length > 0) {
               const randomIndex = Math.floor(Math.random() * lista.length);
               const impostorinador = lista[randomIndex];
@@ -83,18 +77,20 @@ export default function salaEspera() {
               console.log("Respuesta palabra aleatoria: ", res);
               setIdImpostor(respuesta.impostor);
               setPalabrita(res[0].palabra);
+              socket.emit("comenzarPartida", ({ room: sala, idImpostor: idImpostor, palabrita: palabrita }));
               console.log("Palabra asignada: ", res[0].palabra);
 
             }
           }
           buscaSalas();
         }
+        }
       }
-
-      if (segundos === 10) {
+      
+      if (segundos === 15) {
         router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${idImpostor}&encriptaciónSecretaEdgy=asdpfioewvuoqgfu05v8uq34fvu2340568tu2n0guj6f293umn06t5ijt9384kuy3409kb3lvbu6834908tvuwe309gv82b&palabra=${palabrita}`);
       }
-    }
+    
   }, [comenzar, segundos, palabrita]);
 
   function iniciar() {
@@ -103,7 +99,6 @@ export default function salaEspera() {
       setSegundos((prevSegundos) => prevSegundos + 1);
     }, 1000);
 
-    socket.emit("comenzarPartida", ({ sala }));
     setIdIntervalo(intervalo);
     return () => {
       clearInterval(intervalo);
