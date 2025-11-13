@@ -1,4 +1,7 @@
-/* Fondo con la imagen que subiste */
+/* Importa la fuente Orbitron desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+/* ====== ESTRUCTURA GLOBAL ====== */
 .body {
   display: flex;
   justify-content: center;
@@ -8,7 +11,8 @@
   background-size: cover;
   margin: 0;
   padding: 0;
-   font-family: 'Orbitron', sans-serif; /* Aplica Orbitron a todo el contenedor */}
+  font-family: 'Orbitron', sans-serif; /* Aplica Orbitron a toda la página */
+}
 
 /* ====== ESTRUCTURA GENERAL ====== */
 .container {
@@ -16,11 +20,9 @@
   height: 100vh;
   width: 100%;
   color: #fff;
- font-family: 'Orbitron', sans-serif; /* Aplica Orbitron a todo el contenedor */
+  font-family: 'Orbitron', sans-serif; /* Aplica Orbitron a todo el contenedor */
   overflow: hidden;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
 
 /* Contenedor general (ocupa todo) */
 .modalContent {
@@ -47,7 +49,7 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   text-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
-  font-family: inherit; /* Asegura que el título use la misma tipografía */
+  font-family: inherit; /* Asegura que el título use la misma tipografía Orbitron */
 }
 
 /* Inputs en lista centrada */
@@ -73,7 +75,7 @@
     inset 0 2px 4px rgba(255, 255, 255, 0.5),
     0 4px 12px rgba(0, 0, 0, 0.4);
   transition: transform 0.2s ease, box-shadow 0.3s ease;
-  font-family: inherit; /* Hereda la tipografía del contenedor */
+  font-family: inherit; /* Hereda la tipografía Orbitron */
 }
 
 .inputLobby::placeholder {
@@ -106,7 +108,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-  font-family: inherit; /* Hereda la tipografía del contenedor */
+  font-family: inherit; /* Hereda la tipografía Orbitron */
 }
 
 /* Separación entre los dos botones */
@@ -125,18 +127,20 @@
   transform: scale(0.97);
 }
 
+/* mensaje de error */
+.errorMsg {
+  color: #ffdddd;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .titleLobby {
-    font-size: 2.4rem;
-  }
-
-  .inputLobby {
-    font-size: 1rem;
-    padding: 14px 18px;
-  }
-
-  .butonLobby {
-    font-size: 1rem;
-  }
+  .titleLobby { font-size: 2.4rem; }
+  .containerInner { max-width: 92%; }
+  .inputLobby { padding: 14px; font-size: 1rem; }
+  .butonLobby { font-size: 1rem; padding: 12px 18px; }
 }
+

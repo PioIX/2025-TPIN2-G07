@@ -1,5 +1,4 @@
-/* ====== ESTRUCTURA GENERAL ====== */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
 .bodySala {
   background-color: black;
@@ -7,6 +6,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  font-family: 'Orbitron', sans-serif;
 
 }
 
@@ -26,6 +26,7 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-top: 30px;
+  font-family: 'Orbitron', sans-serif;
 }
 .botonSala:hover {
   color: red;
@@ -37,9 +38,11 @@
   color: rgb(202, 4, 4);
   font-size: 5rem;
   text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.7);
+  font-family: 'Orbitron', sans-serif;
 }
 
 .temporizador{
   color:white;
   font-size: 3rem;
+  font-family: 'Orbitron', sans-serif;
 }
