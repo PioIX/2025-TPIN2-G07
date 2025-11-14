@@ -37,10 +37,7 @@ export default function salaEspera() {
         console.log(data.msg)
         setPalabrita(data.palabrita)
         setIdImpostor(data.idImpostor)
-    setComenzar(true)
-    const intervalo = setInterval(() => {
-      setSegundos((prevSegundos) => prevSegundos + 1);
-    }, 1000);
+    router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${data.idImpostor}&encriptaciónSecretaEdgy=asdpfioewvuoqgfu05v8uq34fvu2340568tu2n0guj6f293umn06t5ijt9384kuy3409kb3lvbu6834908tvuwe309gv82b&palabra=${data.palabrita}`);
   }
   iniciar()
     })
@@ -62,8 +59,9 @@ export default function salaEspera() {
 
   useEffect(() => {
     if (comenzar) {
+      if (admin == "TRUE") {
       if (segundos === 1) {
-        if (admin == "TRUE") {
+        
           async function buscaSalas() {
             const lista = await buscarEnSala({ idRoom: sala });
             setJugadores(lista);
@@ -86,14 +84,15 @@ export default function salaEspera() {
           }
           buscaSalas();
         }
-        }
+        
       }
       
       if (segundos === 15) {
         router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${idImpostor}&encriptaciónSecretaEdgy=asdpfioewvuoqgfu05v8uq34fvu2340568tu2n0guj6f293umn06t5ijt9384kuy3409kb3lvbu6834908tvuwe309gv82b&palabra=${palabrita}`);
       }
+    }
     
-  }, [comenzar, segundos, palabrita,idImpostor]);
+  }, [comenzar, segundos, idImpostor]);
 
   function iniciar() {
     setComenzar(true)
