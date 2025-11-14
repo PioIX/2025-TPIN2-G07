@@ -31,7 +31,7 @@ export default function salaEspera() {
 
   useEffect(() => {
     if (!socket) return;
-    if (admin) return;
+    if (admin == "TRUE") return;
     socket.on("iniciando", (data) => {
        function iniciar() {
         console.log(data.msg)
