@@ -12,7 +12,7 @@ import { useSocket } from "../hooks/useSocket";
 let siempre = true;
 
 export default function salaEspera() {
-  const { socket } = useSocket();
+  const { socket, isConnected } = useSocket();
   const [segundos, setSegundos] = useState(0);
   const [idIntervalo, setIdIntervalo] = useState(null);
   const [jugadores, setJugadores] = useState([]);
@@ -33,35 +33,36 @@ export default function salaEspera() {
     if (!socket) return;
     if (admin == "TRUE") return;
     socket.on("iniciando", (data) => {
-       function iniciar() {
+      function iniciar() {
         console.log(data.msg)
         setPalabrita(data.palabrita)
         setIdImpostor(data.idImpostor)
-    router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${data.idImpostor}&encriptaciónSecretaEdgy=asdpfioewvuoqgfu05v8uq34fvu2340568tu2n0guj6f293umn06t5ijt9384kuy3409kb3lvbu6834908tvuwe309gv82b&palabra=${data.palabrita}`);
-  }
-  iniciar()
+        router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${data.idImpostor}&encriptaciónSecretaEdgy=asdpfioewvuoqgfu05v8uq34fvu2340568tu2n0guj6f293umn06t5ijt9384kuy3409kb3lvbu6834908tvuwe309gv82b&palabra=${data.palabrita}`);
+      }
+      iniciar()
     })
   }, [socket]);
 
-  
+
 
   useEffect(() => {
     console.log(`el usuario ${nombre} ingresó a la sala ${sala}`)
     async function armadorDeSalas() {
       await agregarASala({ idUser: id, idRoom: sala, esAdmin: admin });
-      
     }
     armadorDeSalas()
-        if (!socket) return
-    socket.emit("joinRoom", { room: sala });
-
-  }, []);
+    if (!socket) return;
+    if (isConnected) {
+      socket.emit("joinRoom", { room: sala });
+    }
+  }, [isConnected]);
 
   useEffect(() => {
+    console.log("DATOSSS",comenzar, admin)
     if (comenzar) {
       if (admin == "TRUE") {
-      if (segundos === 1) {
-        
+        if (segundos === 1) {
+
           async function buscaSalas() {
             const lista = await buscarEnSala({ idRoom: sala });
             setJugadores(lista);
@@ -77,22 +78,22 @@ export default function salaEspera() {
               console.log("Respuesta palabra aleatoria: ", res);
               setIdImpostor(respuesta.impostor);
               setPalabrita(res[0].palabra);
-              socket.emit("comenzarPartida", ({ room: sala, idImpostor: idImpostor, palabrita: palabrita }));
+              socket.emit("comenzarPartida", { room: sala, idImpostor: respuesta.impostor, palabrita: res[0].palabra });
               console.log("Palabra asignada: ", res[0].palabra);
 
             }
           }
           buscaSalas();
         }
-        
+
       }
-      
+
       if (segundos === 15) {
-        router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${idImpostor}&encriptaciónSecretaEdgy=asdpfioewvuoqgfu05v8uq34fvu2340568tu2n0guj6f293umn06t5ijt9384kuy3409kb3lvbu6834908tvuwe309gv82b&palabra=${palabrita}`);
+       router.push(`./chat?usuario=${usuario}&nombre=${nombre}&sala=${sala}&id=${id}&admin=${admin}&impostor=${idImpostor}&encriptaciónSecretaEdgy=asdpfioewvuoqgfu05v8uq34fvu2340568tu2n0guj6f293umn06t5ijt9384kuy3409kb3lvbu6834908tvuwe309gv82b&palabra=${palabrita}`);
       }
     }
-    
-  }, [comenzar, segundos, idImpostor]);
+
+  }, [comenzar, segundos]);
 
   function iniciar() {
     setComenzar(true)
