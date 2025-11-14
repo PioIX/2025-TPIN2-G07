@@ -57,10 +57,10 @@ io.on("connection", (socket) => {
   const req = socket.request;
 
   socket.on("joinRoom", (data) => {
-    console.log("🚀 ~ io.on ~ req.session.room:", req.session.room);
     if (req.session.room != undefined) socket.leave(req.session.room);
     req.session.room = data.room;
     socket.join(req.session.room);
+    console.log("🚀 ~ io.on ~ req.session.room:", req.session.room);
 
     io.to(req.session.room).emit("chat-messages", {
       user: req.session.user,
@@ -89,7 +89,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("comenzarPartida", (data) => {
-    console.log("hasta acá llegó");
+    console.log("hasta acá llegó", data);
     io.to(data.room).emit("iniciando", {
       msg: "Iniciando la partida",
       palabrita: data.palabrita,

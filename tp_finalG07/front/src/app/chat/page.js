@@ -69,7 +69,7 @@ export default function Chat() {
   // Recibir mensajes
   useEffect(() => {
     if (!socket) return;
-
+    
     socket.on("newMessage", (data) => {
       setMensajes((prev) => [
         ...prev,
