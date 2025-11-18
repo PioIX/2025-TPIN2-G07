@@ -341,3 +341,12 @@ app.post("/jugadorPropio", async function (req, res) {
       WHERE idUser = "${req.body.idUser}"`);
   res.send({ idUser: jugadorPropio });
 });
+
+
+/////////////////////////////////////
+
+// Borrar lo use de proctica
+
+app.get("/jugadoresPrueba",async function (req, res) {
+ res.send({ mensaje: await realizarQuery(`SELECT * FROM Usuarios`) });
+});
