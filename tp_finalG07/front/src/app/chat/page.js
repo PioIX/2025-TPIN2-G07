@@ -144,8 +144,7 @@ export default function Chat() {
       index: index
     });
 
-    // 3. Limpiar el input
-    setMensajeACT("");
+
   }
 
   useEffect(() => {
@@ -154,11 +153,12 @@ export default function Chat() {
     }
   }, [index]);
 
-  function usuarioVotado() {
+  function usuarioVotado(jugador) {
     setVotacion(false);
+    console.log(jugador)
     socket.emit("usuarioVotado", {
       room: sala,
-      nombre: usuario
+      idUser:jugador.idUser
     });
   }
 
@@ -237,7 +237,7 @@ export default function Chat() {
                     text={jugador.nombre}
                     nombre={jugador.nombre}
                   />
-                  {votacion ? <Boton className={styles.botonVotar} text="Votar" onClick={usuarioVotado}></Boton> : null}
+                  {votacion ? <Boton className={styles.botonVotar} text="Votar" onClick={() => usuarioVotado(jugador)}></Boton> : null}
                 </li>
               ))
             ) : (

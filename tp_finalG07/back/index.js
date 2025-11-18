@@ -96,6 +96,9 @@ io.on("connection", (socket) => {
       idImpostor: data.idImpostor
     }, console.log(data.palabrita));
   });
+  socket.on("usuarioVotado", (data) => {
+    
+
 
   socket.on("disconnect", () => {
     console.log("Disconnect");

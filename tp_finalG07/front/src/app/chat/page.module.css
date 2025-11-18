@@ -30,9 +30,6 @@
   box-sizing: border-box;
 }
 
-
-/* ====== PANEL IZQUIERDO: LISTA DE JUGADORES ====== */
-/* ====== PANEL IZQUIERDO: LISTA DE JUGADORES ====== */
 .sidebar {
   width: 20%;
   background: rgba(7, 6, 6, 0.85);
@@ -40,7 +37,7 @@
   flex-direction: column;
   align-items: center;
   border-left: 2px solid rgba(170, 45, 45, 0.1);
-  padding: 1rem 6px 1rem 1rem; /* menos padding derecho para que el scroll quede al borde */
+  padding: 1rem 6px 1rem 1rem; 
   border-radius: 10px;
   box-sizing: border-box;
 }
@@ -53,8 +50,7 @@
   text-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
 }
 
-/* ====== LISTA DE JUGADORES ====== */
-/* ====== LISTA DE JUGADORES ====== */
+
 .playerList {
   list-style: none;
   padding: 0; /* quitar padding para que los elementos ocupen todo el ancho */
