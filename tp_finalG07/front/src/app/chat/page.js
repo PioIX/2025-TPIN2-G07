@@ -21,6 +21,7 @@ export default function Chat() {
   const [tamañoSala, setTamañoSala] = useState(0);
   const [index, setIndex] = useState(0);
   const [votacion, setVotacion] = useState(false);
+  const [votos, setVotos] = useState([]);
   const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
   const sala = searchParams.get("sala");
@@ -56,6 +57,12 @@ export default function Chat() {
         setTamañoSala(data.length);
         console.log("Jugadores cargados:", data);
         console.log("Tamaño de sala seteado:", data.length);
+        userList.map((jugador, i) => (
+          votos.push({
+            key: i,
+            idUser: jugador.idUser,
+            votos: 0
+          })))
       } catch (error) {
         console.error("Error al cargar jugadores:", error);
       }
@@ -158,94 +165,106 @@ export default function Chat() {
     console.log(jugador)
     socket.emit("usuarioVotado", {
       room: sala,
-      idUser:jugador.idUser
+      idUser: jugador.idUser,
+      votos: votos
     });
   }
 
+  socket.on("resultados", (data) => {
+    setVotos(data.resultado)
+  })
+
+
+useEffect(
+  function ContarVotos()
+  
+);[votos]
+
+
   return <>
-      <div className={styles.container}>
-        <main className={styles.chatArea}>
-          <div
-            className={clsx(styles.role, {
-              [styles.roleImpostor]: impostor,
-              [styles.roleJugador]: !impostor,
-            })}
-          >
-            Tu rol es:{" "}
-            <span>{impostor ? "Impostor" : `Jugador y tu palabra es: ${palabra}`}</span>
-          </div>
+    <div className={styles.container}>
+      <main className={styles.chatArea}>
+        <div
+          className={clsx(styles.role, {
+            [styles.roleImpostor]: impostor,
+            [styles.roleJugador]: !impostor,
+          })}
+        >
+          Tu rol es:{" "}
+          <span>{impostor ? "Impostor" : `Jugador y tu palabra es: ${palabra}`}</span>
+        </div>
 
-          <div className={styles.messages}>
-            {mensajes.map((msg, index) => (
-              <Mensaje
-                key={index}
-                className={clsx(styles.message, {
-                  [styles.messagePropioImpostor]: msg.nombre === usuario && impostor,
-                  [styles.messageOtroImpostor]: msg.nombre !== usuario && impostor,
-                  [styles.messagePropioJugador]: msg.nombre === usuario && !impostor,
-                  [styles.messageOtroJugador]: msg.nombre !== usuario && !impostor,
-                })}
-                text={`${msg.texto}`}
-                nombre={`${msg.nombre}`}
+        <div className={styles.messages}>
+          {mensajes.map((msg, index) => (
+            <Mensaje
+              key={index}
+              className={clsx(styles.message, {
+                [styles.messagePropioImpostor]: msg.nombre === usuario && impostor,
+                [styles.messageOtroImpostor]: msg.nombre !== usuario && impostor,
+                [styles.messagePropioJugador]: msg.nombre === usuario && !impostor,
+                [styles.messageOtroJugador]: msg.nombre !== usuario && !impostor,
+              })}
+              text={`${msg.texto}`}
+              nombre={`${msg.nombre}`}
+            />
+          ))}
+        </div>
+
+        <div className={styles.inputRow}>
+          { }
+          {turnoPropio ? (
+            <>
+              <Input
+                tipo="chat"
+                placeholder="Es tu turno, escribí un mensaje..."
+                value={mensajeACT}
+                onChange={(e) => setMensajeACT(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && enviarMensaje()}
               />
-            ))}
-          </div>
+              <Boton
+                className={clsx({
+                  [styles.botonImpostor]: impostor,
+                  [styles.botonJugador]: !impostor,
+                })}
+                text="Enviar"
+                onClick={enviarMensaje}
+              />
+            </>
+          ) : (
+            <p style={{ color: '#ccc', width: '100%', textAlign: 'center' }}>
+              Esperando a {userList[index] ? userList[index].nombre : '...'}
+            </p>
+          )}
+        </div>
+      </main>
 
-          <div className={styles.inputRow}>
-            { }
-            {turnoPropio ? (
-              <>
-                <Input
-                  tipo="chat"
-                  placeholder="Es tu turno, escribí un mensaje..."
-                  value={mensajeACT}
-                  onChange={(e) => setMensajeACT(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && enviarMensaje()}
+      <aside className={styles.sidebar}>
+        <h2>Jugadores</h2>
+        <ul className={styles.playerList}>
+          {userList.length > 0 ? (
+            userList.map((jugador, i) => (
+              <li
+                key={jugador.idUser}
+                style={{
+                  backgroundColor: i === index ? '#444' : 'transparent',
+                  padding: '4px',
+                  borderRadius: '4px'
+                }}
+              >
+                <Usuario
+                  className={styles.player}
+                  text={jugador.nombre}
+                  nombre={jugador.nombre}
                 />
-                <Boton
-                  className={clsx({
-                    [styles.botonImpostor]: impostor,
-                    [styles.botonJugador]: !impostor,
-                  })}
-                  text="Enviar"
-                  onClick={enviarMensaje}
-                />
-              </>
-            ) : (
-              <p style={{ color: '#ccc', width: '100%', textAlign: 'center' }}>
-                Esperando a {userList[index] ? userList[index].nombre : '...'}
-              </p>
-            )}
-          </div>
-        </main>
-
-        <aside className={styles.sidebar}>
-          <h2>Jugadores</h2>
-          <ul className={styles.playerList}>
-            {userList.length > 0 ? (
-              userList.map((jugador, i) => (
-                <li
-                  key={jugador.idUser}
-                  style={{
-                    backgroundColor: i === index ? '#444' : 'transparent',
-                    padding: '4px',
-                    borderRadius: '4px'
-                  }}
-                >
-                  <Usuario
-                    className={styles.player}
-                    text={jugador.nombre}
-                    nombre={jugador.nombre}
-                  />
-                  {votacion ? <Boton className={styles.botonVotar} text="Votar" onClick={() => usuarioVotado(jugador)}></Boton> : null}
-                </li>
-              ))
-            ) : (
-              <p>No hay jugadores conectados.</p>
-            )}
-          </ul>
-        </aside>
-      </div>
-    </>
+                {votacion ? <Boton className={styles.botonVotar} text="Votar" onClick={() => usuarioVotado(jugador)}></Boton> : null}
+              </li>
+            ))
+          ) : (
+            <p>No hay jugadores conectados.</p>
+          )}
+        </ul>
+      </aside>
+    </div>
+  </>
 
 }
