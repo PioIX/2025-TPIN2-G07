@@ -128,7 +128,7 @@ export async function traerJugadorPropio(dato) {
   const data = await response.json();
   return data;
 }
-
+//////////////////////////////////////////////////////////////////////
 export async function usuarios(dato) {
   const respuesta = await fetch (`http://localhost:4000/jugadoresPrueba`, {
     method: 'GET',

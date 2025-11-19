@@ -45,6 +45,7 @@ export default function Prueba() {
     const [salaACT, setSalaACT] = useState(0)
     const [mensajeACT, setmensajeACT] = useState("");
     const [mensajes, setMensajes] = useState([]);
+    
     useEffect(() => {
   async function fetchData() {
     const respuesta = await traerUsuarios();

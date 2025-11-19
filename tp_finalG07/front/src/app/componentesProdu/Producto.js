@@ -1,13 +1,19 @@
 "use client";
 
-import Title from "./Title";
-import Boton from "./Boton";
+import Titulo from "./Titulo";
+import Botoncito from "./Botoncito";
+import Descripcion from "./Descripcion";
+import { useEffect } from "react";
 
-export default function Jugador(props){
-    return <>
+export default function Producto(props){
+
+   
+   return <>
     <div>
-        <Title></Title>
-        <Boton></Boton>
+        <Titulo text={props.text}></Titulo>
+        <Descripcion text={props.descrip}></Descripcion>
+        <Botoncito onClick={props.onClick} text={props.lable}></Botoncito>
+
     </div>
     </>
 }
