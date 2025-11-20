@@ -97,12 +97,16 @@ io.on("connection", (socket) => {
     }, console.log(data.palabrita));
   });
   socket.on("usuarioVotado", (data) => {
+    console.log(data.votos)
     data.votos.map((votado) =>{
       if (data.idUser == votado.idUser){
+        
         data.votos.votos++
+        console.log(data.votos.votos)
       }
     }
     )
+
     io.to(data.room).emit("resultados", {
       resultado: data.votos
   });

@@ -57,12 +57,13 @@ export default function Chat() {
         setTamañoSala(data.length);
         console.log("Jugadores cargados:", data);
         console.log("Tamaño de sala seteado:", data.length);
-        userList.map((jugador, i) => (
-          votos.push({
-            key: i,
-            idUser: jugador.idUser,
-            votos: 0
-          })))
+        // Construir el array de votos a partir de los datos recibidos y setearlo en estado
+        const votosIniciales = data.map((jugador, i) => ({
+          key: i,
+          idUser: jugador.idUser,
+          votado: 0,
+        }));
+        setVotos(votosIniciales);
       } catch (error) {
         console.error("Error al cargar jugadores:", error);
       }
@@ -163,23 +164,13 @@ export default function Chat() {
   function usuarioVotado(jugador) {
     setVotacion(false);
     console.log(jugador)
+    console.log(votos)
     socket.emit("usuarioVotado", {
       room: sala,
       idUser: jugador.idUser,
       votos: votos
     });
   }
-
-  socket.on("resultados", (data) => {
-    setVotos(data.resultado)
-  })
-
-
-useEffect(
-  function ContarVotos()
-  
-);[votos]
-
 
   return <>
     <div className={styles.container}>
