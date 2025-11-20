@@ -98,17 +98,18 @@ io.on("connection", (socket) => {
   });
   socket.on("usuarioVotado", (data) => {
     console.log(data.votos)
-    data.votos.map((votado) =>{
-      if (data.idUser == votado.idUser){
-        
-        data.votos.votos++
-        console.log(data.votos.votos)
+    data.votos.map((jugador) =>{
+      if (data.idUser == jugador.idUser){
+        console.log(data.votos)
+        data.votos.votado++
+        console.log("votos de ", data.idUser, ": ", data.votos.votado)
       }
     }
     )
 
     io.to(data.room).emit("resultados", {
       resultado: data.votos
+      
   });
   })
     

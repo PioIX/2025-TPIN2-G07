@@ -170,7 +170,9 @@ export default function Chat() {
       idUser: jugador.idUser,
       votos: votos
     });
+
   }
+
 
   return <>
     <div className={styles.container}>
