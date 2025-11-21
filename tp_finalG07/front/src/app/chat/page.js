@@ -172,7 +172,16 @@ export default function Chat() {
     });
 
   }
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("resultados", ({ resultado }) => {
+      setVotos(resultado);
+      console.log("los votos son: ", resultado)
+    });
+    console.log("los votos son: ", votos)
+    return () => socket.off("resultados");
 
+  }, [socket]);
 
   return <>
     <div className={styles.container}>

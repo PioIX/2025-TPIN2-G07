@@ -97,28 +97,22 @@ io.on("connection", (socket) => {
     }, console.log(data.palabrita));
   });
   socket.on("usuarioVotado", (data) => {
-    console.log(data.votos)
-    data.votos.map((jugador) =>{
-      if (data.idUser == jugador.idUser){
-        console.log(data.votos)
-        data.votos.votado++
-        console.log("votos de ", data.idUser, ": ", data.votos.votado)
-      }
-    }
-    )
-
-    io.to(data.room).emit("resultados", {
-      resultado: data.votos
+  const votosActualizados = data.votos.map(j => {
+    if (j.idUser === data.idUser) {
+      return { ...j, votado: (j.votado || 0) + 1 };
       
+    }
+    return j;
+    console.log("back votos : ", votosActualizados);
   });
-  })
-    
 
+});
 
   socket.on("disconnect", () => {
     console.log("Disconnect");
   });
 });
+
 
 app.get("/", function (req, res) {
   res.status(200).send({
