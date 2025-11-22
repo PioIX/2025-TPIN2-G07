@@ -8,11 +8,13 @@ import Boton from "../componentes/Boton";
 import Input from "../componentes/Input";
 import { useSocket } from "../hooks/useSocket";
 import Mensaje from "../componentes/Mensaje";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { jugadores } from "../fetch/fetch";
 
 export default function Chat() {
   const { socket } = useSocket();
+  const router = useRouter();
+  
   const [mensajeACT, setMensajeACT] = useState("");
   const [mensajes, setMensajes] = useState([]);
   const [userList, setUserList] = useState([]);
@@ -20,33 +22,74 @@ export default function Chat() {
   const [turnoPropio, setTurnoPropio] = useState(false);
   const [tamañoSala, setTamañoSala] = useState(0);
   const [index, setIndex] = useState(0);
+  
+  // Estados para la lógica de votación
   const [votacion, setVotacion] = useState(false);
+  const [yaVote, setYaVote] = useState(false);
   const [votos, setVotos] = useState([]);
+
   const searchParams = useSearchParams();
   const nombre = searchParams.get("nombre");
   const sala = searchParams.get("sala");
-  const usuario = searchParams.get("usuario"); // Este es el 'nombre' que se usa para el chat
+  const usuario = searchParams.get("usuario");
   const idImpostor = searchParams.get("impostor");
-  const id = searchParams.get("id"); // Este es el ID numérico del usuario actual
+  const id = searchParams.get("id");
   const palabra = searchParams.get("palabra");
 
-  // 1. Efecto para definir el rol (impostor o no)
-  // Se ejecuta solo cuando cambian los IDs
-  useEffect(() => {
-    console.log(`🧑‍🚀 Usuario ${nombre} (ID: ${id}) ingresó a la sala ${sala}`);
-    console.log(`ID Impostor: ${idImpostor}, Mi ID: ${id}`);
+  let totalVotos = 0;
+  if (votos) {
+    votos.forEach((v) => {
+      totalVotos += (v.votado || 0);
+    });
+  }
 
-    // Comparamos el 'id' de la URL (string) con 'idImpostor' (string)
+  const esperandoVotos = votacion && (totalVotos < tamañoSala) && tamañoSala > 0;
+
+  useEffect(() => {
+    if (votacion && tamañoSala > 0 && totalVotos >= tamañoSala) {
+        console.log("🗳️ Todos han votado. Procesando resultados...");
+        const timer = setTimeout(() => {
+            const votosOrdenados = [...votos].sort((a, b) => (b.votado || 0) - (a.votado || 0));
+            const expulsado = votosOrdenados[0];
+            if (String(expulsado.idUser) === String(id)) {
+                alert("Has sido expulsado de la nave.");
+                router.push('./jugar'); 
+            } else {
+                const nuevaLista = userList.filter(u => String(u.idUser) !== String(expulsado.idUser));
+                
+                setUserList(nuevaLista);
+                setTamañoSala(nuevaLista.length);
+                setIndex(0); 
+                setMensajes([]); 
+                setVotacion(false);
+                setYaVote(false);
+                
+                const votosReiniciados = nuevaLista.map((jugador, i) => ({
+                    key: i,
+                    idUser: jugador.idUser,
+                    votado: 0,
+                }));
+                setVotos(votosReiniciados);
+                
+                alert(`El jugador ${expulsado.idUser} fue expulsado. ¡Comienza nueva ronda!`);
+            }
+        }, 2000);
+
+        return () => clearTimeout(timer);
+    }
+  }, [totalVotos, votacion, tamañoSala, votos, userList, id, router]);
+
+
+  // 1. Efecto Rol
+  useEffect(() => {
     if (id === idImpostor) {
       setImpostor(true);
-      console.log("Rol asignado: IMPOSTOR");
     } else {
       setImpostor(false);
-      console.log("Rol asignado: JUGADOR");
     }
   }, [id, idImpostor, nombre, sala]);
 
-  // 2. Efecto para cargar jugadores
+  // 2. Efecto Cargar Jugadores
   useEffect(() => {
     if (!sala) return;
 
@@ -55,9 +98,7 @@ export default function Chat() {
         const data = await jugadores({ idRoom: sala });
         setUserList(data);
         setTamañoSala(data.length);
-        console.log("Jugadores cargados:", data);
-        console.log("Tamaño de sala seteado:", data.length);
-        // Construir el array de votos a partir de los datos recibidos y setearlo en estado
+        
         const votosIniciales = data.map((jugador, i) => ({
           key: i,
           idUser: jugador.idUser,
@@ -71,15 +112,13 @@ export default function Chat() {
     listaJugadores();
   }, [sala]);
 
-
-  // 3. Efecto para unirse a la sala
+  // 3. Efecto Join Room
   useEffect(() => {
     if (!socket || !sala) return;
     socket.emit("joinRoom", { room: sala });
-    console.log(`Socket uniéndose a la sala: ${sala}`);
   }, [socket, sala]);
 
-  // 4. Efecto para recibir mensajes
+  // 4. Efecto Recibir Mensajes
   useEffect(() => {
     if (!socket) return;
 
@@ -93,88 +132,82 @@ export default function Chat() {
     return () => socket.off("newMessage");
   }, [socket]);
 
-  // 5. Efecto para RECIBIR el cambio de turno
+  // 5. Efecto Recibir Turno
   useEffect(() => {
     if (!socket) return;
-
     socket.on("cambioTurnoRecibir", (data) => {
-      console.log(`RECIBIDO: Nuevo índice de turno es ${data.index}`);
       setIndex(data.index);
     });
-
     return () => socket.off("cambioTurnoRecibir");
   }, [socket]);
 
-  // 6. Efecto para CALCULAR si es mi turno
+  // 6. Efecto Calcular Turno Propio
   useEffect(() => {
     if (userList.length > 0) {
-      // 1. Obtenemos el jugador que tiene el turno
       const jugadorDeTurno = userList[index];
-
       if (!jugadorDeTurno) {
-        console.warn(`Índice de turno ${index} fuera de rango.`);
         setTurnoPropio(false);
         return;
       }
-
-      console.log(`VERIFICANDO TURNO: Turno actual es de ${jugadorDeTurno.nombre} (ID: ${jugadorDeTurno.idUser}). Mi ID es ${id}.`);
-
-      // 2. Comparamos el ID del jugador de turno (Number) con mi ID (String)
       if (jugadorDeTurno.idUser == id) {
-        console.log("¡Es mi turno!");
         setTurnoPropio(true);
       } else {
-        console.log("No es mi turno.");
         setTurnoPropio(false);
       }
     }
   }, [userList, id, index]);
 
+  // 7. Detectar Fin de Ronda (activa votación)
+  useEffect(() => {
+    if (tamañoSala > 0 && mensajes.length >= tamañoSala) {
+        setVotacion(true);
+    }
+  }, [mensajes, tamañoSala]);
+
+  // 8. Escuchar Resultados Votación
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("resultados", ({ resultado }) => {
+      setVotos(resultado);
+    });
+    return () => socket.off("resultados");
+  }, [socket]);
 
 
-  // Función para enviar el mensaje y pasar el turno
   function enviarMensaje() {
-    if (!socket || mensajeACT.trim() === "" || !turnoPropio) return;
+    if (!socket || mensajeACT.trim() === "" || !turnoPropio || esperandoVotos) return;
 
-    console.log("Enviando mensaje y pasando turno...");
-
-    // 1. Enviar el mensaje
     socket.emit("sendMessage", {
       room: sala,
       nombre: usuario,
       message: mensajeACT
     });
 
-    // 2. Pedir al backend que cambie el turno
     socket.emit("cambioTurnoEnviar", {
       room: sala,
       tamañoSala: tamañoSala,
       index: index
     });
-
-
+    
+    setMensajeACT("");
   }
 
-  useEffect(() => {
-    if (index >= tamañoSala) {
-      setVotacion(true);
-    }
-  }, [index]);
-
   function usuarioVotado(jugador) {
-    setVotacion(false);
-    console.log(jugador)
-    console.log(votos)
+    setYaVote(true); 
+    
     socket.emit("usuarioVotado", {
       room: sala,
       idUser: jugador.idUser,
       votos: votos
     });
-
   }
 
+<<<<<<< Updated upstream
 
   return <>
+=======
+  return (
+>>>>>>> Stashed changes
     <div className={styles.container}>
       <main className={styles.chatArea}>
         <div
@@ -188,9 +221,9 @@ export default function Chat() {
         </div>
 
         <div className={styles.messages}>
-          {mensajes.map((msg, index) => (
+          {mensajes.map((msg, idx) => (
             <Mensaje
-              key={index}
+              key={idx}
               className={clsx(styles.message, {
                 [styles.messagePropioImpostor]: msg.nombre === usuario && impostor,
                 [styles.messageOtroImpostor]: msg.nombre !== usuario && impostor,
@@ -204,8 +237,22 @@ export default function Chat() {
         </div>
 
         <div className={styles.inputRow}>
-          { }
-          {turnoPropio ? (
+          {esperandoVotos ? (
+            <div style={{ 
+                width: '100%', 
+                textAlign: 'center', 
+                padding: '10px', 
+                backgroundColor: 'rgba(0,0,0,0.6)', 
+                borderRadius: '8px',
+                color: '#fff',
+                fontWeight: 'bold',
+                border: '1px solid #555'
+            }}>
+                {yaVote 
+                    ? `Esperando que todos terminen de votar (${totalVotos}/${tamañoSala})...` 
+                    : "⚠️ ¡Ronda finalizada! Debes votar a alguien de la lista."}
+            </div>
+          ) : turnoPropio ? (
             <>
               <Input
                 tipo="chat"
@@ -241,7 +288,10 @@ export default function Chat() {
                 style={{
                   backgroundColor: i === index ? '#444' : 'transparent',
                   padding: '4px',
-                  borderRadius: '4px'
+                  borderRadius: '4px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
                 }}
               >
                 <Usuario
@@ -249,7 +299,19 @@ export default function Chat() {
                   text={jugador.nombre}
                   nombre={jugador.nombre}
                 />
-                {votacion ? <Boton className={styles.botonVotar} text="Votar" onClick={() => usuarioVotado(jugador)}></Boton> : null}
+                {votacion && !yaVote ? (
+                  <Boton 
+                    className={styles.botonVotar} 
+                    text="Votar" 
+                    onClick={() => usuarioVotado(jugador)}
+                  />
+                ) : null}
+                
+                {votacion && (
+                   <span style={{ fontSize: '0.8em', marginLeft: '10px', color: '#aaa' }}>
+                     {votos.find(v => v.idUser === jugador.idUser)?.votado || 0} votos
+                   </span>
+                )}
               </li>
             ))
           ) : (
@@ -258,6 +320,5 @@ export default function Chat() {
         </ul>
       </aside>
     </div>
-  </>
-
+  );
 }
