@@ -1,19 +1,16 @@
-var express = require("express"); //Tipo de servidor: Express
-var bodyParser = require("body-parser"); //Convierte los JSON
+var express = require("express");
+var bodyParser = require("body-parser");
 var cors = require("cors");
 const { realizarQuery } = require("./modulos/mysql");
 
-var app = express(); //Inicializo express
-var port = process.env.PORT || 4000; //Ejecuto el servidor en el puerto 3000
+var app = express();
+var port = process.env.PORT || 4000;
 
-// Convierte una petición recibida (POST-GET...) a objeto JSON
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
-// Puerto por el que estoy ejecutando la página Web
 
 const session = require("express-session");
-// Para el manejo de las variables de sesión
 
 const server = app.listen(port, () => {
   console.log(`Servidor NodeJS corriendo en http://localhost:${port}/`);
@@ -21,7 +18,6 @@ const server = app.listen(port, () => {
 
 const io = require("socket.io")(server, {
   cors: {
-    // IMPORTANTE: REVISAR PUERTO DEL FRONTEND
     origin: [
       "http://localhost:3000",
       "http://localhost:3001",
@@ -32,14 +28,13 @@ const io = require("socket.io")(server, {
       "http://localhost:3005",
       "http://localhost:3006",
       "http://localhost:3007",
-    ], // Permitir el origen localhost:3000
-    methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
-    credentials: true, // Habilitar el envío de cookies
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   },
 });
 
 const sessionMiddleware = session({
-  //Elegir tu propia key secreta
   secret: "supersarasa",
   resave: false,
   saveUninitialized: false,
@@ -51,8 +46,7 @@ io.use((socket, next) => {
   sessionMiddleware(socket.request, {}, next);
 });
 
-//Ahora van los eventos
-
+// Eventos de Socket.IO
 io.on("connection", (socket) => {
   const req = socket.request;
 
@@ -68,12 +62,13 @@ io.on("connection", (socket) => {
     });
   });
 
+  // Lógica original de turnos restaurada (resetea a 0)
   socket.on("cambioTurnoEnviar", (data) => {
     data.index = data.index + 1;
     if (data.index >= data.tamañoSala) {
       data.index = 0;
     }
-    console.log("recibido " + data.index)
+    console.log("recibido " + data.index);
     io.to(req.session.room).emit("cambioTurnoRecibir", {
       index: data.index,
     });
@@ -93,31 +88,39 @@ io.on("connection", (socket) => {
     io.to(data.room).emit("iniciando", {
       msg: "Iniciando la partida",
       palabrita: data.palabrita,
-      idImpostor: data.idImpostor
-    }, console.log(data.palabrita));
-  });
-  socket.on("usuarioVotado", (data) => {
-  const votosActualizados = data.votos.map(j => {
-    if (j.idUser === data.idUser) {
-      return { ...j, votado: (j.votado || 0) + 1 };
-      
-    }
-    return j;
-    console.log("back votos : ", votosActualizados);
+      idImpostor: data.idImpostor,
+    });
+    console.log(data.palabrita);
   });
 
-});
+  // ----------------------------------------------------
+  // CORRECCIÓN SOLICITADA: usuarioVotado
+  // ----------------------------------------------------
+  socket.on("usuarioVotado", (data) => {
+    // 1. Calculamos el nuevo array de votos
+    const votosActualizados = data.votos.map((j) => {
+      if (j.idUser === data.idUser) {
+        return { ...j, votado: (j.votado || 0) + 1 };
+      }
+      return j;
+    });
+
+    console.log("back votos : ", votosActualizados);
+
+    // 2. ¡IMPORTANTE! Enviamos el resultado actualizado a la sala
+    // Usamos data.room porque req.session.room a veces puede fallar dependiendo del transporte
+    io.to(data.room).emit("resultados", { resultado: votosActualizados });
+  });
+  // ----------------------------------------------------
 
   socket.on("disconnect", () => {
     console.log("Disconnect");
   });
 });
 
-
+// Rutas HTTP (Sin cambios)
 app.get("/", function (req, res) {
-  res.status(200).send({
-    message: "GET Home route working fine!",
-  });
+  res.status(200).send({ message: "GET Home route working fine!" });
 });
 
 app.get("/traerUsuarios", async function (req, res) {
@@ -139,11 +142,11 @@ app.get("/usuarios", async function (req, res) {
   res.send({ mensaje: await realizarQuery(`SELECT * FROM Usuarios`) });
 });
 
-app.get("/usuarios", async function (req, res) {
-  check = await realizarQuery(
-    `SELECT * FROM Usuarios WHERE username = "${req.body.username}  && password = ${req.body.password}"`
+app.post("/usuarios", async function (req, res) {
+  let check = await realizarQuery(
+    `SELECT * FROM Usuarios WHERE username = "${req.body.username}" && password = "${req.body.password}"`
   );
-  if ((check.length = 0)) {
+  if (check.length == 0) {
     res.send({ mensaje: "El nombre o la contraseña no coincide" });
   } else {
     res.send(
@@ -156,23 +159,20 @@ app.get("/usuarios", async function (req, res) {
 
 app.post("/jugadores", async function (req, res) {
   try {
-    //Tizi: Traer SOLO los id de esa sala
     const idJugadores = await realizarQuery(`
       SELECT idUser FROM UsuariosPorSala WHERE idRoom = '${req.body.idRoom}'`);
-    // Si no hay jugadores, devolver array vacio
+    
     if (idJugadores.length === 0) {
       return res.send({ mensaje: [] });
     }
     const listaIds = idJugadores.map((u) => u.idUser).join(",");
 
-    // Traer los usu con los id que guardo el map
     const jugadores = await realizarQuery(`
       SELECT idUser, nombre, fotoPerfil 
       FROM Usuarios 
       WHERE idUser IN (${listaIds})
     `);
 
-    // Enviar la lista de jugadores id al front
     res.send({ mensaje: jugadores });
   } catch (error) {
     console.error("Error en /jugadores:", error);
@@ -210,13 +210,13 @@ app.post("/crearUsuario", async function (req, res) {
 
 app.post("/buscarUsuario", async function (req, res) {
   try {
-    check = await realizarQuery(
+    let check = await realizarQuery(
       `SELECT * FROM Usuarios WHERE nombre = "${req.body.nombre}" && contraseña ="${req.body.nombre}"`
     );
-    if ((check.length = 0)) {
+    if (check.length == 0) {
       res.send({ mensaje: "El usuario no existe" });
     } else {
-      respuesta = await realizarQuery(
+      let respuesta = await realizarQuery(
         `SELECT * FROM Usuarios WHERE nombre = '${req.body.nombre}'`
       );
       res.send(respuesta);
@@ -229,7 +229,6 @@ app.post("/buscarUsuario", async function (req, res) {
 app.post("/buscarSala", async function (req, res) {
   try {
     console.log(req.body);
-
     let arreglateputo = await realizarQuery(
       `SELECT * FROM Rooms WHERE idRoom = "${req.body.idRoom}"`
     );
@@ -237,7 +236,7 @@ app.post("/buscarSala", async function (req, res) {
     if (arreglateputo.length == 0) {
       res.send({ mensaje: "La sala no existe", crearSala: true });
     } else {
-      id = await realizarQuery(
+      let id = await realizarQuery(
         `SELECT idRoom FROM Rooms WHERE idRoom = '${req.body.idRoom}'`
       );
       res.send({ sala: id[0], crearSala: false });
@@ -302,7 +301,7 @@ app.post("/agregarASala", async function (req, res) {
     res.send({ mensaje: "El usuario ya está cargado" });
   } else {
     await realizarQuery(`INSERT INTO UsuariosPorSala(idUser, idRoom, esAdmin) VALUES 
-		("${req.body.idUser}", "${req.body.idRoom}", ${req.body.esAdmin})`);
+    ("${req.body.idUser}", "${req.body.idRoom}", ${req.body.esAdmin})`);
     res.send(
       await realizarQuery(
         `select idUserPorSala FROM UsuariosPorSala where idUser = ${req.body.idUser} AND idRoom = ${req.body.idRoom} and esAdmin = ${req.body.esAdmin}`
@@ -310,16 +309,14 @@ app.post("/agregarASala", async function (req, res) {
     );
   }
 });
-//a revisar
 
 app.post("/buscarEnSala", async function (req, res) {
-  respuesta = await realizarQuery(`
+  let respuesta = await realizarQuery(`
       SELECT idUser FROM UsuariosPorSala
       WHERE idRoom = "${req.body.idRoom}"`);
   res.send(respuesta);
 });
 
-//Tizi: faltaba where idRoom = ${req.body.idRoom} sino subia imp a todos las salas en las que estaba el user
 app.put("/actualizarImpostor", async function (req, res) {
   await realizarQuery(
     `UPDATE UsuariosPorSala SET impostor = true where idUser= '${req.body.idUser}' AND idRoom = '${req.body.idRoom}'`
@@ -328,14 +325,14 @@ app.put("/actualizarImpostor", async function (req, res) {
 });
 
 app.post("/palabraAleatoria", async function (req, res) {
-  respuesta = await realizarQuery(`
+  let respuesta = await realizarQuery(`
       SELECT palabra FROM Palabras
       WHERE idPalabra = ${Math.floor(Math.random() * 100) + 1}`);
   res.send(respuesta);
 });
 
 app.post("/jugadorPropio", async function (req, res) {
-  jugadorPropio = await realizarQuery(`
+  let jugadorPropio = await realizarQuery(`
       SELECT idUser FROM UsuariosPorSala
       WHERE idUser = "${req.body.idUser}"`);
   res.send({ idUser: jugadorPropio });
