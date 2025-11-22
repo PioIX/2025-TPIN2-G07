@@ -202,12 +202,7 @@ export default function Chat() {
     });
   }
 
-<<<<<<< Updated upstream
-
-  return <>
-=======
   return (
->>>>>>> Stashed changes
     <div className={styles.container}>
       <main className={styles.chatArea}>
         <div
