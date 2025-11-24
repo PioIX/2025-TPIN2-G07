@@ -99,7 +99,7 @@ export default function Chat() {
     }
   }, [totalVotos, votacion, tamañoSala, votos, userList, id, idImpostor, impostor, router]);
 
-
+//
   // 1. Efecto Rol
   useEffect(() => {
     if (id === idImpostor) {
