@@ -22,8 +22,6 @@ export default function Chat() {
   const [turnoPropio, setTurnoPropio] = useState(false);
   const [tamañoSala, setTamañoSala] = useState(0);
   const [index, setIndex] = useState(0);
-  
-  // Estados para la lógica de votación
   const [votacion, setVotacion] = useState(false);
   const [yaVote, setYaVote] = useState(false);
   const [votos, setVotos] = useState([]);
