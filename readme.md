@@ -27,3 +27,21 @@ Sería ya el juego, que consta un  trabajo es un juego Impostor . Es un juego en
 primero a cada jugador se le asigna una palabra común , salvo a uno que es el impostor los jugadore se turnaran para decir una palabra relacionada con la palabra común y el impostor debera hacerse pasar por jugador al final de cada ronda todos votaran por echar a un jugador y el objetivo será echar a ese impostor 
 <img width="1195" height="552" alt="image" src="https://github.com/user-attachments/assets/b7aa67cb-e371-4dbc-a22c-e4a8f3048330" />
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Divicion de tareas: Franco BDD,; Miligros -- ; Oriana Read me y Parte final del css; Victoria parte final css; Simon:pedidos Backend, socket y Funciones Frontend; Tiziana Backend pedidos y socket, partes del Frontend y estucturas html y conditional rendering, 
+
