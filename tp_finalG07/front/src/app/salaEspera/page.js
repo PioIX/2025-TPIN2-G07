@@ -118,7 +118,7 @@ export default function salaEspera() {
           ></Title>
           {admin == "TRUE" ? <>
             {comenzar ? <h2 className={styles.temporizador}>Temporizador: {segundos}s</h2> : <h2 className={styles.temporizador}>Haz click para comenzar la partida</h2>}
-            <Boton onClick={iniciar} text="iniciar partida"> </Boton></> : <h2 className={styles.temporizador}>espera a que el host comience la partida</h2>}
+            <Boton className={styles.botonSala} onClick={iniciar} text="iniciar partida"> </Boton></> : <h2 className={styles.temporizador}>espera a que el host comience la partida</h2>}
         </div>
       </div>
     </>
